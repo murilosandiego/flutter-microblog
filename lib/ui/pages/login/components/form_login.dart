@@ -11,8 +11,6 @@ import '../cubit/form_cubit.dart';
 class FormLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<FormLoginCubit>();
-
     return BlocListener<FormLoginCubit, FormLoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionSuccess) {
@@ -31,48 +29,11 @@ class FormLogin extends StatelessWidget {
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 42),
         child: Column(
           children: [
-            BlocBuilder<FormLoginCubit, FormLoginState>(
-              buildWhen: (previous, current) {
-                return previous.email.value != current.email.value;
-              },
-              cubit: cubit,
-              builder: (context, state) {
-                return AppTextFormField(
-                  initialValue: state.email.value,
-                  label: 'E-mail',
-                  onChanged: cubit.handleEmail,
-                  errorText: cubit.emailError,
-                  textInputType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                );
-              },
-            ),
+            _EmailField(),
             SizedBox(height: 26),
-            BlocBuilder<FormLoginCubit, FormLoginState>(
-              buildWhen: (previous, current) =>
-                  previous.password.value != current.password.value,
-              builder: (context, state) {
-                return AppTextFormField(
-                  label: 'Senha',
-                  onChanged: cubit.handlePassword,
-                  errorText: cubit.passwordError,
-                  obscureText: true,
-                );
-              },
-            ),
+            _PasswordField(),
             SizedBox(height: 32),
-            BlocBuilder<FormLoginCubit, FormLoginState>(
-              buildWhen: (previous, current) =>
-                  previous.status != current.status,
-              builder: (_, state) {
-                return AppButton(
-                  isLoading: state.status.isSubmissionInProgress,
-                  text: 'Login',
-                  textColor: Colors.white,
-                  onPressed: state.status.isValid ? () => cubit.auth() : null,
-                );
-              },
-            ),
+            _SubmitButton(),
             SizedBox(height: 32),
             CreateAccountButton(
               onPressed: () =>
@@ -82,6 +43,66 @@ class FormLogin extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _SubmitButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<FormLoginCubit>();
+    return BlocBuilder<FormLoginCubit, FormLoginState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (_, state) {
+        return AppButton(
+          isLoading: state.status.isSubmissionInProgress,
+          text: 'Login',
+          textColor: Colors.white,
+          onPressed: state.status.isValid ? () => cubit.auth() : null,
+        );
+      },
+    );
+  }
+}
+
+class _PasswordField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<FormLoginCubit>();
+    return BlocBuilder<FormLoginCubit, FormLoginState>(
+      buildWhen: (previous, current) =>
+          previous.password.value != current.password.value,
+      builder: (context, state) {
+        return AppTextFormField(
+          label: 'Senha',
+          onChanged: cubit.handlePassword,
+          errorText: cubit.passwordError,
+          obscureText: true,
+        );
+      },
+    );
+  }
+}
+
+class _EmailField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<FormLoginCubit>();
+    return BlocBuilder<FormLoginCubit, FormLoginState>(
+      buildWhen: (previous, current) {
+        return previous.email.value != current.email.value;
+      },
+      cubit: cubit,
+      builder: (context, state) {
+        return AppTextFormField(
+          initialValue: state.email.value,
+          label: 'E-mail',
+          onChanged: cubit.handleEmail,
+          errorText: cubit.emailError,
+          textInputType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+        );
+      },
     );
   }
 }

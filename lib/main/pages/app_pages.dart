@@ -6,7 +6,7 @@ import '../../ui/pages/feed/cubit/feed_cubit.dart';
 import '../../ui/pages/feed/feed_page.dart';
 import '../../ui/pages/login/cubit/form_cubit.dart';
 import '../../ui/pages/login/login_page.dart';
-import '../../ui/pages/signup/cubit/signup_cubit.dart';
+import '../../ui/pages/signup/cubit/form_signup_cubit.dart';
 import '../../ui/pages/signup/signup_page.dart';
 import '../../ui/pages/splash/cubit/splash_cubit.dart';
 import '../../ui/pages/splash/splash_page.dart';
@@ -40,9 +40,9 @@ abstract class AppPages {
     return routes;
   }
 
-  static BlocProvider<SignupCubit> _makeSignUpPage() {
+  static BlocProvider<FormSignUpCubit> _makeSignUpPage() {
     return BlocProvider(
-      create: (_) => SignupCubit(
+      create: (_) => FormSignUpCubit(
         addAccount: AddAccountFactory.makeRemoteAddAccount(),
         saveCurrentAccount:
             SaveCurrentAccountFactory.makeLocalSaveCurrentAccount(),
