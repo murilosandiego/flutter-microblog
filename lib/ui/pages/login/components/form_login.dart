@@ -21,8 +21,11 @@ class FormLogin extends StatelessWidget {
           );
         }
         if (state.status.isSubmissionFailure) {
-          Scaffold.of(context)
-              .showSnackBar(SnackBar(content: Text('Error ao entrar')));
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage),
+            ),
+          );
         }
       },
       child: Padding(

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:boticario_news/ui/helpers/ui_error.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:meta/meta.dart';
@@ -30,13 +31,15 @@ class FormLoginCubit extends Cubit<FormLoginState> {
 
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on DomainError catch (error) {
-      print(error);
-      // if (error == DomainError.invalidCredentials) {
-      //   _mainError.value = UIError.invalidCredentials;
-      //   return;
-      // }
+      String errorMessage = UIError.unexpected.description;
+      if (error == DomainError.invalidCredentials) {
+        errorMessage = UIError.invalidCredentials.description;
+      }
 
-      emit(state.copyWith(status: FormzStatus.submissionFailure));
+      emit(state.copyWith(
+        status: FormzStatus.submissionFailure,
+        errorMessage: errorMessage,
+      ));
       emit(state.copyWith(status: FormzStatus.valid));
     }
   }
