@@ -17,6 +17,7 @@ class _FeedPageCubitState extends State<FeedPageCubit> {
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<FeedCubit>(context);
     cubit.load();
+
     return Scaffold(
       backgroundColor: Color(0xFFF0F2F5),
       appBar: AppBar(
@@ -44,7 +45,6 @@ class _FeedPageCubitState extends State<FeedPageCubit> {
                   context, AppPages.welcome, (route) => false);
             }
           },
-          cubit: cubit,
           builder: (context, state) {
             if (state is FeedLoading) {
               return Center(

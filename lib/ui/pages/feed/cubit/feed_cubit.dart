@@ -29,17 +29,9 @@ class FeedCubit extends Cubit<FeedState> {
 
   Future<void> load() async {
     try {
-      final newsBoticario = await loadNews.load();
       final postsUsers = await loadPosts.load();
 
-      newsBoticario.addAll(postsUsers);
-
-      final sortedResult = newsBoticario
-        ..sort(
-          (a, b) => b.message.createdAt.compareTo(a.message.createdAt),
-        );
-
-      final news = sortedResult.map((post) => toViewModel(post)).toList();
+      final news = postsUsers.map((post) => toViewModel(post)).toList();
 
       emit(FeedLoaded(news));
     } catch (error) {
