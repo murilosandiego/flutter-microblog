@@ -24,7 +24,7 @@ class FeedCubit extends Cubit<FeedState> {
     @required this.loadPosts,
     @required this.savePost,
     @required this.removePost,
-    this.localStorage,
+    @required this.localStorage,
   }) : super(FeedLoading());
 
   Future<void> load() async {
@@ -46,6 +46,7 @@ class FeedCubit extends Cubit<FeedState> {
       emit(LogoutUser());
     } catch (error) {
       print(error);
+      emit(FeedError(UIError.unexpected.description));
     }
   }
 
@@ -53,7 +54,7 @@ class FeedCubit extends Cubit<FeedState> {
     return NewsViewModel(
       id: post?.id,
       message: post?.message?.content,
-      date: DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_BR')
+      date: DateFormat(DateFormat.YEAR_MONTH_DAY)
           .format(post?.message?.createdAt),
       user: post?.user?.name,
       userId: post?.user?.id,

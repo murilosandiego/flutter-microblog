@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-import '../../../../main/pages/app_pages.dart';
+import '../../../../main/routes/app_routes.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_form_field.dart';
 import '../../../components/create_account_button.dart';
 import '../cubit/form_signup_cubit.dart';
+import '../cubit/form_signup_state.dart';
 
 class FormSignup extends StatelessWidget {
   @override
@@ -16,7 +17,7 @@ class FormSignup extends StatelessWidget {
         if (state.status.isSubmissionSuccess) {
           Navigator.pushNamedAndRemoveUntil(
             context,
-            AppPages.feed,
+            AppRoutes.feed,
             (route) => false,
           );
         }
@@ -41,7 +42,7 @@ class FormSignup extends StatelessWidget {
             CreateAccountButton(
               nameButton: 'Já tem conta? Fazer login',
               onPressed: () =>
-                  Navigator.popAndPushNamed(context, AppPages.login),
+                  Navigator.popAndPushNamed(context, AppRoutes.login),
               backgroundWhite: true,
             )
           ],

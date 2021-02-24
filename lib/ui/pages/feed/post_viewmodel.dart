@@ -17,7 +17,7 @@ class NewsViewModel extends Equatable {
   });
 
   @override
-  List get props => [message, date, user];
+  List get props => [message, date, user, id, userId];
 
   @override
   bool get stringify => true;

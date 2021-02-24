@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../main/pages/app_pages.dart';
+import '../../../main/routes/app_routes.dart';
 import '../../components/logo_widget.dart';
 import 'cubit/splash_cubit.dart';
+import 'cubit/splash_state.dart';
 
 class SplashPage extends StatelessWidget {
   @override
@@ -16,11 +17,11 @@ class SplashPage extends StatelessWidget {
           child: BlocListener<SplashCubit, SplashState>(
         listener: (_, state) {
           if (state is SplashToWelcome) {
-            Navigator.popAndPushNamed(_, AppPages.welcome);
+            Navigator.popAndPushNamed(_, AppRoutes.welcome);
           }
 
           if (state is SplashToHome) {
-            Navigator.popAndPushNamed(_, AppPages.feed);
+            Navigator.popAndPushNamed(_, AppRoutes.feed);
           }
         },
         child: LogoWidget(),

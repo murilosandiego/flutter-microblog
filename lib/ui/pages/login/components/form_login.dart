@@ -1,12 +1,13 @@
-import 'package:boticario_news/main/pages/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
+import '../../../../main/routes/app_routes.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_form_field.dart';
 import '../../../components/create_account_button.dart';
 import '../cubit/form_cubit.dart';
+import '../cubit/form_state.dart';
 
 class FormLogin extends StatelessWidget {
   @override
@@ -16,7 +17,7 @@ class FormLogin extends StatelessWidget {
         if (state.status.isSubmissionSuccess) {
           Navigator.pushNamedAndRemoveUntil(
             context,
-            AppPages.feed,
+            AppRoutes.feed,
             (route) => false,
           );
         }
@@ -40,7 +41,7 @@ class FormLogin extends StatelessWidget {
             SizedBox(height: 32),
             CreateAccountButton(
               onPressed: () =>
-                  Navigator.popAndPushNamed(context, AppPages.signup),
+                  Navigator.popAndPushNamed(context, AppRoutes.signup),
               backgroundWhite: true,
             )
           ],

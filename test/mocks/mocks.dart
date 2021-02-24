@@ -3,7 +3,6 @@ import 'package:boticario_news/domain/entities/post_entity.dart';
 import 'package:boticario_news/domain/entities/user_entity.dart';
 import 'package:boticario_news/ui/pages/feed/post_viewmodel.dart';
 import 'package:faker/faker.dart';
-import 'package:intl/intl.dart';
 
 const apiResponseNewsBoticario = """
 {
@@ -83,7 +82,7 @@ List<PostEntity> newsList = [
   PostEntity(
     message: MessageEntity(
       content: faker.lorem.sentence(),
-      createdAt: DateTime(2020, 02, 20),
+      createdAt: DateTime(2020, 01, 20),
     ),
     user: UserEntity(
       name: faker.person.name(),
@@ -93,7 +92,7 @@ List<PostEntity> newsList = [
   PostEntity(
     message: MessageEntity(
       content: faker.lorem.sentence(),
-      createdAt: DateTime(2018, 08, 14),
+      createdAt: DateTime(2018, 01, 14),
     ),
     user: UserEntity(
       name: faker.person.name(),
@@ -107,8 +106,7 @@ final postsViewModel = newsList
       (post) => NewsViewModel(
         id: post?.id,
         message: post?.message?.content,
-        date: DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_BR')
-            .format(post?.message?.createdAt),
+        date: '${post.message.createdAt.day}',
         user: post?.user?.name,
         userId: post?.user?.id,
       ),

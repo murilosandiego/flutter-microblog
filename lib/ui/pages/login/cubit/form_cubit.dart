@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:boticario_news/ui/helpers/ui_error.dart';
-import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:meta/meta.dart';
 
@@ -8,8 +7,7 @@ import '../../../../domain/errors/domain_error.dart';
 import '../../../../domain/usecases/authentication.dart';
 import '../../../../domain/usecases/save_current_account.dart';
 import '../../../helpers/form_validators.dart';
-
-part 'form_state.dart';
+import 'form_state.dart';
 
 class FormLoginCubit extends Cubit<FormLoginState> {
   final Authetication authetication;

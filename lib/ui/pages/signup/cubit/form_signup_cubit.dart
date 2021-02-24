@@ -2,14 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:boticario_news/domain/errors/domain_error.dart';
 import 'package:boticario_news/ui/helpers/form_validators.dart';
 import 'package:boticario_news/ui/helpers/ui_error.dart';
-import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../domain/usecases/add_account.dart';
 import '../../../../domain/usecases/save_current_account.dart';
 
-part 'form_signup_state.dart';
+import 'form_signup_state.dart';
 
 class FormSignUpCubit extends Cubit<FormSignUpState> {
   final AddAccount addAccount;

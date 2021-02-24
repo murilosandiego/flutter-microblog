@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../main/pages/app_pages.dart';
+import '../../../main/routes/app_routes.dart';
 import '../../components/reload_screen.dart';
 import 'components/post_widget.dart';
 import 'cubit/feed_cubit.dart';
@@ -42,7 +42,7 @@ class _FeedPageCubitState extends State<FeedPageCubit> {
           listener: (_, state) {
             if (state is LogoutUser) {
               Navigator.pushNamedAndRemoveUntil(
-                  context, AppPages.welcome, (route) => false);
+                  context, AppRoutes.welcome, (route) => false);
             }
           },
           builder: (context, state) {

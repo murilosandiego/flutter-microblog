@@ -1,8 +1,8 @@
+import 'package:boticario_news/main/routes/app_routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'main/pages/app_pages.dart';
 import 'ui/components/app_theme.dart';
 
 void main() async {
@@ -16,8 +16,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Cubit Microblog',
       theme: makeAppTheme(),
-      routes: AppPages.getRoutes(context),
-      initialRoute: AppPages.splash,
+      routes: AppRoutes.getRoutes(context),
+      initialRoute: AppRoutes.splash,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

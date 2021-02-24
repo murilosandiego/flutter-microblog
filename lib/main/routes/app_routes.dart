@@ -20,15 +20,15 @@ import '../factories/usecases/remove_post_factory.dart';
 import '../factories/usecases/save_current_account_factory.dart';
 import '../factories/usecases/save_post_factory.dart';
 
-abstract class AppPages {
+abstract class AppRoutes {
   static const splash = '/';
   static const welcome = '/welcome';
   static const login = '/login';
   static const feed = '/feed';
-  static const newPost = '/newPost';
+  static const newPost = '/new-post';
   static const signup = 'signup';
 
-  static getRoutes(BuildContext context) {
+  static getRoutes(_) {
     final Map<String, WidgetBuilder> routes = {
       splash: (_) => _makeSplashPage(),
       welcome: (_) => WelcomePage(),
@@ -83,43 +83,4 @@ abstract class AppPages {
       child: SplashPage(),
     );
   }
-
-  // static final pages = [
-  //   GetPage(
-  //     name: splash,
-  //     page: () => SplashPage(),
-  //     binding: SplashBinding(),
-  //   ),
-  //   GetPage(
-  //     name: welcome,
-  //     page: () => WelcomePage(),
-  //   ),
-  //   GetPage(
-  //     name: login,
-  //     page: () => LoginPage(),
-  //     binding: LoginBinding(),
-  //     transition: Transition.downToUp,
-  //   ),
-  //   GetPage(
-  //     name: signup,
-  //     page: () => SignUpPage(),
-  //     binding: SignupBinding(),
-  //     transition: Transition.downToUp,
-  //   ),
-  // GetPage(
-  //   name: feed,
-  //   page: () => FeedPage(),
-  //   binding: FeedBinding(),
-  // ),
-  // GetPage(
-  //   name: feed,
-  //   page: () => FeedPageCubit(),
-  //   binding: FeedBinding(),
-  // ),
-  // GetPage(
-  //   name: newPost,
-  //   page: () => NewPostPage(),
-  //   transition: Transition.downToUp,
-  // ),
-  // ];
 }

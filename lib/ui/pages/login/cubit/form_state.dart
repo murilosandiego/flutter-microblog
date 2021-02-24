@@ -1,4 +1,7 @@
-part of 'form_cubit.dart';
+import 'package:equatable/equatable.dart';
+import 'package:formz/formz.dart';
+
+import '../../../helpers/form_validators.dart';
 
 class FormLoginState extends Equatable {
   final Email email;

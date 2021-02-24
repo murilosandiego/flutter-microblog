@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../domain/usecases/load_current_account.dart';
-
-part 'splash_state.dart';
+import 'splash_state.dart';
 
 class SplashCubit extends Cubit<SplashState> {
   final LoadCurrentAccount loadCurrentAccount;

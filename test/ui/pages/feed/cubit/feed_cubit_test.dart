@@ -1,11 +1,18 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:boticario_news/domain/errors/domain_error.dart';
 import 'package:boticario_news/domain/usecases/load_news.dart';
 import 'package:boticario_news/domain/usecases/load_posts.dart';
 import 'package:boticario_news/domain/usecases/remove_post.dart';
 import 'package:boticario_news/domain/usecases/save_post.dart';
+import 'package:boticario_news/ui/helpers/ui_error.dart';
 import 'package:boticario_news/ui/pages/feed/cubit/feed_cubit.dart';
+import 'package:boticario_news/ui/pages/feed/cubit/feed_state.dart';
+import 'package:boticario_news/ui/pages/feed/post_viewmodel.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:mockito/mockito.dart';
-import 'package:test/test.dart';
+
+import '../../../../mocks/mocks.dart';
 
 class LoadNewsSpy extends Mock implements LoadNews {}
 
@@ -15,18 +22,19 @@ class SavePostSpy extends Mock implements SavePost {}
 
 class RemovePostSpy extends Mock implements RemovePost {}
 
+class LocalStorageSpy extends Mock implements LocalStorage {}
+
 void main() {
   FeedCubit sut;
   LoadNewsSpy loadNews;
   LoadPostsSpy loadPosts;
   SavePostSpy savePost;
   RemovePostSpy removePost;
+  LocalStorageSpy localStorage;
 
-  // mockSuccess() => when(loadNews.load()).thenAnswer((_) async => newsList);
+  mockSuccessPost() => when(loadPosts.load()).thenAnswer((_) async => newsList);
 
-  // mockSuccessPost() => when(loadPosts.load()).thenAnswer((_) async => newsList);
-
-  // mockError() => when(loadNews.load()).thenThrow(DomainError.unexpected);
+  mockError() => when(loadPosts.load()).thenThrow(DomainError.unexpected);
 
   setUp(() {
     loadNews = LoadNewsSpy();
@@ -37,55 +45,50 @@ void main() {
       loadPosts: loadPosts,
       savePost: savePost,
       removePost: removePost,
+      localStorage: localStorage,
     );
+
+    mockSuccessPost();
   });
 
-  // test('Should call loadNews on loadData', () async {
-  //   mockSuccess();
-  //   await sut.load();
-
-  //   verify(loadNews.load()).called(1);
-  // });
-
   blocTest(
-    'Should call loadNews() and loadPosts() when load is call ',
+    'Should call loadPosts() once when load',
     build: () => sut,
-    act: (cubit) => cubit.load(),
+    act: (sut) => sut.load(),
     verify: (_) {
-      verify(loadNews.load()).called(1);
       verify(loadPosts.load()).called(1);
     },
   );
 
-  // test('Should call loadPosts on loadData', () async {
-  //   mockSuccessPost();
-  //   await sut.load();
+  blocTest(
+    'Should emits FeedLoaded on success',
+    build: () => sut,
+    act: (sut) => sut.load(),
+    expect: [
+      FeedLoaded([
+        NewsViewModel(
+          message: newsList[0].message.content,
+          date: 'January 20, 2020',
+          user: newsList[0].user.name,
+        ),
+        NewsViewModel(
+          message: newsList[1].message.content,
+          date: 'January 14, 2018',
+          user: newsList[1].user.name,
+        ),
+      ])
+    ],
+  );
 
-  //   verify(loadPosts.load()).called(1);
-  // });
-
-  // test('Should return false if the message size is greater than 280', () {
-  //   final validMessage = faker.randomGenerator.string(300, min: 281);
-
-  //   sut.handleNewPostMessage(validMessage);
-
-  //   expect(sut.isFormValid, false);
-  //   expect(sut.errorMessageNewPost, UIError.invalidMessageNewPost);
-  // });
-
-  // test('Should return true if the message size is less or equal than 280', () {
-  //   final validMessage = faker.randomGenerator.string(280);
-
-  //   sut.handleNewPostMessage(validMessage);
-
-  //   expect(sut.isFormValid, true);
-  // });
-
-  // test('Should set UIError.unexpected if throws', () async {
-  //   mockError();
-
-  //   await sut.load();
-
-  //   expect(sut.errorMessage, UIError.unexpected.description);
-  // });
+  blocTest(
+    'Should emits FeedLoaded on failure',
+    build: () {
+      mockError();
+      return sut;
+    },
+    act: (sut) => sut.load(),
+    expect: [
+      FeedError(UIError.unexpected.description),
+    ],
+  );
 }
