@@ -60,7 +60,7 @@ abstract class AppRoutes {
         removePost: RemovePostFactory.makeRemoteRemovePost(),
         localStorage: LocalStorage('app_local'),
       ),
-      child: FeedPageCubit(),
+      child: FeedPage(),
     );
   }
 

@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Cubit Microblog',
+      title: 'Microblog',
       theme: makeAppTheme(),
       routes: AppRoutes.getRoutes(context),
       initialRoute: AppRoutes.splash,

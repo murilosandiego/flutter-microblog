@@ -7,12 +7,7 @@ import 'components/post_widget.dart';
 import 'cubit/feed_cubit.dart';
 import 'cubit/feed_state.dart';
 
-class FeedPageCubit extends StatefulWidget {
-  @override
-  _FeedPageCubitState createState() => _FeedPageCubitState();
-}
-
-class _FeedPageCubitState extends State<FeedPageCubit> {
+class FeedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<FeedCubit>(context);
