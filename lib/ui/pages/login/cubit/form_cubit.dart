@@ -19,7 +19,7 @@ class FormLoginCubit extends Cubit<FormLoginState> {
 
   Future<void> auth() async {
     try {
-      if (!isFormValid) return;
+      if (!_isFormValid) return;
 
       emit(state.copyWith(status: FormzStatus.submissionInProgress));
       final account = await authetication.auth(AuthenticationParams(
@@ -38,11 +38,11 @@ class FormLoginCubit extends Cubit<FormLoginState> {
         status: FormzStatus.submissionFailure,
         errorMessage: errorMessage,
       ));
-      emit(state.copyWith(status: FormzStatus.valid));
+      emit(state.copyWith(status: FormzStatus.valid, errorMessage: ''));
     }
   }
 
-  void handleEmail(text) {
+  void handleEmail(String text) {
     final email = Email.dirty(text);
 
     emit(state.copyWith(
@@ -51,7 +51,7 @@ class FormLoginCubit extends Cubit<FormLoginState> {
     ));
   }
 
-  void handlePassword(text) {
+  void handlePassword(String text) {
     final password = Password.dirty(text);
 
     emit(state.copyWith(
@@ -78,7 +78,7 @@ class FormLoginCubit extends Cubit<FormLoginState> {
         : null;
   }
 
-  bool get isFormValid {
+  bool get _isFormValid {
     final email = Email.dirty(state.email.value);
     final password = Password.dirty(state.password.value);
     emit(state.copyWith(
