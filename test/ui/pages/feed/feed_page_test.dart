@@ -20,7 +20,7 @@ main() {
       (WidgetTester tester) async {
     when(feedCubit.state).thenAnswer((_) => FeedLoading());
 
-    await loadPage(tester, feedCubit);
+    await _loadPage(tester, feedCubit);
 
     final loading = find.byType(CircularProgressIndicator);
     expect(loading, findsOneWidget);
@@ -30,7 +30,7 @@ main() {
       (WidgetTester tester) async {
     when(feedCubit.state).thenAnswer((_) => FeedLoaded([]));
 
-    await loadPage(tester, feedCubit);
+    await _loadPage(tester, feedCubit);
 
     final listView = find.byType(ListView);
     expect(listView, findsOneWidget);
@@ -55,7 +55,7 @@ main() {
           )
         ]));
 
-    await loadPage(tester, feedCubit);
+    await _loadPage(tester, feedCubit);
 
     final listView = find.byType(ListView);
     expect(listView, findsOneWidget);
@@ -69,7 +69,7 @@ main() {
       (WidgetTester tester) async {
     when(feedCubit.state).thenAnswer((_) => FeedError('error'));
 
-    await loadPage(tester, feedCubit);
+    await _loadPage(tester, feedCubit);
 
     expect(find.text('error'), findsOneWidget);
     expect(find.text('Recarregar'), findsOneWidget);
@@ -79,13 +79,13 @@ main() {
       (WidgetTester tester) async {
     when(feedCubit.state).thenAnswer((_) => FeedError('error'));
 
-    await loadPage(tester, feedCubit);
+    await _loadPage(tester, feedCubit);
     await tester.tap(find.text('Recarregar'));
     verify(feedCubit.load()).called(2);
   });
 }
 
-Future loadPage(WidgetTester tester, FeedCubitSpy feedCubit) async {
+Future _loadPage(WidgetTester tester, FeedCubitSpy feedCubit) async {
   await tester.pumpWidget(
     MaterialApp(
       home: MultiBlocProvider(

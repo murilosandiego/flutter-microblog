@@ -18,6 +18,16 @@ class Email extends FormzInput<String, EmailValidationError> {
   }
 }
 
+extension EmailErrorMessageExtension on Email {
+  String get errorMessage {
+    if (this.error == EmailValidationError.isNull) return null;
+    if (this.error == EmailValidationError.invalid) return 'E-mail inválido';
+    return this.error == EmailValidationError.empty
+        ? 'Campo obrigatório'
+        : null;
+  }
+}
+
 enum PasswordValidationError { invalid, empty, isNull }
 
 class Password extends FormzInput<String, PasswordValidationError> {
@@ -32,6 +42,17 @@ class Password extends FormzInput<String, PasswordValidationError> {
   }
 }
 
+extension PasswordErrorMessageExtension on Password {
+  String get errorMessage {
+    if (this.error == PasswordValidationError.isNull) return null;
+    if (this.error == PasswordValidationError.invalid)
+      return 'Senha muito curta';
+    return this.error == PasswordValidationError.empty
+        ? 'Campo obrigatório'
+        : null;
+  }
+}
+
 enum NameValidationError { invalid, empty, isNull }
 
 class NameInput extends FormzInput<String, NameValidationError> {
@@ -43,5 +64,13 @@ class NameInput extends FormzInput<String, NameValidationError> {
     if (value == null) return NameValidationError.isNull;
     if (value.isEmpty) return NameValidationError.empty;
     return value.length >= 3 ? null : NameValidationError.invalid;
+  }
+}
+
+extension NameInputErrorMessageExtension on NameInput {
+  String get errorMessage {
+    if (this.error == NameValidationError.isNull) return null;
+    if (this.error == NameValidationError.invalid) return 'E-mail inválido';
+    return this.error == NameValidationError.empty ? 'Campo obrigatório' : null;
   }
 }

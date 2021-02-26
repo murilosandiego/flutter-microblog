@@ -8,6 +8,7 @@ import '../../../components/app_text_form_field.dart';
 import '../../../components/create_account_button.dart';
 import '../cubit/form_cubit.dart';
 import '../cubit/form_state.dart';
+import '../../../helpers/form_validators.dart';
 
 class FormLogin extends StatelessWidget {
   @override
@@ -80,7 +81,7 @@ class _PasswordField extends StatelessWidget {
         return AppTextFormField(
           label: 'Senha',
           onChanged: cubit.handlePassword,
-          errorText: cubit.passwordError,
+          errorText: state.password.errorMessage,
           obscureText: true,
         );
       },
@@ -102,7 +103,7 @@ class _EmailField extends StatelessWidget {
           initialValue: state.email.value,
           label: 'E-mail',
           onChanged: cubit.handleEmail,
-          errorText: cubit.emailError,
+          errorText: state.email.errorMessage,
           textInputType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
         );

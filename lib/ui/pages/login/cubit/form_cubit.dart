@@ -22,8 +22,11 @@ class FormLoginCubit extends Cubit<FormLoginState> {
       if (!_isFormValid) return;
 
       emit(state.copyWith(status: FormzStatus.submissionInProgress));
+
       final account = await authetication.auth(AuthenticationParams(
-          email: state.email.value, secret: state.password.value));
+        email: state.email.value,
+        secret: state.password.value,
+      ));
 
       await saveCurrentAccount.save(account);
 
@@ -38,6 +41,7 @@ class FormLoginCubit extends Cubit<FormLoginState> {
         status: FormzStatus.submissionFailure,
         errorMessage: errorMessage,
       ));
+
       emit(state.copyWith(status: FormzStatus.valid, errorMessage: ''));
     }
   }
@@ -58,24 +62,6 @@ class FormLoginCubit extends Cubit<FormLoginState> {
       password: password.valid ? password : Password.pure(text),
       status: Formz.validate([state.email, password]),
     ));
-  }
-
-  String get emailError {
-    if (state.email.error == EmailValidationError.isNull) return null;
-    if (state.email.error == EmailValidationError.invalid)
-      return 'E-mail inválido';
-    return state.email.error == EmailValidationError.empty
-        ? 'Campo obrigatório'
-        : null;
-  }
-
-  String get passwordError {
-    if (state.password.error == PasswordValidationError.isNull) return null;
-    if (state.password.error == PasswordValidationError.invalid)
-      return 'Senha muito curta';
-    return state.password.error == PasswordValidationError.empty
-        ? 'Campo obrigatório'
-        : null;
   }
 
   bool get _isFormValid {
