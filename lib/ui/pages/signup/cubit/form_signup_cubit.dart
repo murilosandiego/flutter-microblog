@@ -44,7 +44,10 @@ class FormSignUpCubit extends Cubit<FormSignUpState> {
         status: FormzStatus.submissionFailure,
         errorMessage: errorMessage,
       ));
-      emit(state.copyWith(status: FormzStatus.valid));
+      emit(state.copyWith(
+        status: FormzStatus.valid,
+        errorMessage: '',
+      ));
     }
   }
 
@@ -73,33 +76,6 @@ class FormSignUpCubit extends Cubit<FormSignUpState> {
       password: password.valid ? password : Password.pure(text),
       status: Formz.validate([password, state.name, state.email]),
     ));
-  }
-
-  String get nameError {
-    if (state.name.error == NameValidationError.isNull) return null;
-    if (state.name.error == NameValidationError.invalid)
-      return 'Nome muito curto';
-    return state.name.error == NameValidationError.empty
-        ? 'Campo obrigatório'
-        : null;
-  }
-
-  String get emailError {
-    if (state.email.error == EmailValidationError.isNull) return null;
-    if (state.email.error == EmailValidationError.invalid)
-      return 'E-mail inválido';
-    return state.email.error == EmailValidationError.empty
-        ? 'Campo obrigatório'
-        : null;
-  }
-
-  String get passwordError {
-    if (state.password.error == PasswordValidationError.isNull) return null;
-    if (state.password.error == PasswordValidationError.invalid)
-      return 'Senha muito curta';
-    return state.password.error == PasswordValidationError.empty
-        ? 'Campo obrigatório'
-        : null;
   }
 
   bool get _isFormValid {

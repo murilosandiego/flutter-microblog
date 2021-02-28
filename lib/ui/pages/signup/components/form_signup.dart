@@ -1,3 +1,4 @@
+import 'package:boticario_news/ui/helpers/form_validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -86,7 +87,7 @@ class _PasswordField extends StatelessWidget {
         return AppTextFormField(
           label: 'Senha',
           onChanged: cubit.handlePassword,
-          errorText: cubit.passwordError,
+          errorText: state.password.errorMessage,
           obscureText: true,
         );
       },
@@ -109,7 +110,7 @@ class _EmailField extends StatelessWidget {
         return AppTextFormField(
           label: 'E-mail',
           onChanged: cubit.handleEmail,
-          errorText: cubit.emailError,
+          errorText: state.email.errorMessage,
           textInputType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
         );
@@ -129,7 +130,7 @@ class _NameField extends StatelessWidget {
         return AppTextFormField(
           label: 'Nome',
           onChanged: cubit.handleName,
-          errorText: cubit.nameError,
+          errorText: state.name.errorMessage,
           textInputAction: TextInputAction.next,
         );
       },
