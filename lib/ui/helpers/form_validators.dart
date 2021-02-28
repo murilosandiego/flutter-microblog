@@ -70,7 +70,7 @@ class NameInput extends FormzInput<String, NameValidationError> {
 extension NameInputErrorMessageExtension on NameInput {
   String get errorMessage {
     if (this.error == NameValidationError.isNull) return null;
-    if (this.error == NameValidationError.invalid) return 'E-mail inválido';
+    if (this.error == NameValidationError.invalid) return 'Nome muito curto';
     return this.error == NameValidationError.empty ? 'Campo obrigatório' : null;
   }
 }

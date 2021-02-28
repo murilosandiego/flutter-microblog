@@ -8,7 +8,7 @@ import 'package:meta/meta.dart';
 import '../../../../domain/usecases/add_account.dart';
 import '../../../../domain/usecases/save_current_account.dart';
 
-import 'form_signup_state.dart';
+import './form_signup_state.dart';
 
 class FormSignUpCubit extends Cubit<FormSignUpState> {
   final AddAccount addAccount;
