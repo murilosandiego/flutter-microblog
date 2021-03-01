@@ -1,5 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:boticario_news/main/routes/app_routes.dart';
 import 'package:boticario_news/ui/helpers/form_validators.dart';
+import 'package:boticario_news/ui/helpers/ui_error.dart';
+import 'package:boticario_news/ui/pages/feed/cubit/feed_cubit.dart';
+import 'package:boticario_news/ui/pages/feed/cubit/feed_state.dart';
+import 'package:boticario_news/ui/pages/feed/feed_page.dart';
+import 'package:boticario_news/ui/pages/login/cubit/form_cubit.dart';
+import 'package:boticario_news/ui/pages/login/cubit/form_state.dart';
+import 'package:boticario_news/ui/pages/login/login_page.dart';
 import 'package:boticario_news/ui/pages/signup/cubit/form_signup_cubit.dart';
 import 'package:boticario_news/ui/pages/signup/cubit/form_signup_state.dart';
 import 'package:boticario_news/ui/pages/signup/signup_page.dart';
@@ -7,22 +15,63 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:formz/formz.dart';
 import 'package:mockito/mockito.dart';
 
 class FormSignUpCubitSpy extends MockBloc<FormSignUpState>
     implements FormSignUpCubit {}
 
+class FeedCubitSpy extends MockBloc<FeedState> implements FeedCubit {}
+
+class FormLoginCubitSpy extends MockBloc<FormLoginState>
+    implements FormLoginCubit {}
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
 main() {
   FormSignUpCubitSpy formSignCubit;
+  MockNavigatorObserver navigatorObserver;
+  FeedCubitSpy feedCubit;
+  FormLoginCubitSpy formLoginCubit;
 
   setUp(() {
     formSignCubit = FormSignUpCubitSpy();
+    feedCubit = FeedCubitSpy();
+    formLoginCubit = FormLoginCubitSpy();
+    navigatorObserver = MockNavigatorObserver();
   });
+
+  Future loadPage(
+    WidgetTester tester,
+  ) async {
+    final Map<String, WidgetBuilder> routes = {
+      AppRoutes.signup: (_) => BlocProvider<FormSignUpCubit>.value(
+            value: formSignCubit,
+            child: SignUpPage(),
+          ),
+      AppRoutes.feed: (_) => BlocProvider<FeedCubit>.value(
+            value: feedCubit,
+            child: FeedPage(),
+          ),
+      AppRoutes.login: (_) => BlocProvider<FormLoginCubit>.value(
+            value: formLoginCubit,
+            child: LoginPage(),
+          ),
+    };
+
+    await tester.pumpWidget(
+      MaterialApp(
+        initialRoute: AppRoutes.signup,
+        routes: routes,
+        navigatorObservers: [navigatorObserver],
+      ),
+    );
+  }
 
   testWidgets('Should call handles with correct values', (tester) async {
     when(formSignCubit.state).thenReturn(FormSignUpState());
 
-    await _loadPage(tester, formSignCubit);
+    await loadPage(tester);
 
     final name = faker.person.firstName();
     await tester.enterText(find.bySemanticsLabel('Nome'), name);
@@ -46,7 +95,7 @@ main() {
         [FormSignUpState(name: NameInput.pure('us'))],
       ),
     );
-    await _loadPage(tester, formSignCubit);
+    await loadPage(tester);
     await tester.pump();
 
     expect(find.text('Nome muito curto'), findsOneWidget);
@@ -61,7 +110,7 @@ main() {
         [FormSignUpState(name: NameInput.pure(''))],
       ),
     );
-    await _loadPage(tester, formSignCubit);
+    await loadPage(tester);
     await tester.pump();
 
     expect(find.text('Campo obrigatório'), findsOneWidget);
@@ -76,7 +125,7 @@ main() {
         [FormSignUpState(email: Email.pure('invalid'))],
       ),
     );
-    await _loadPage(tester, formSignCubit);
+    await loadPage(tester);
     await tester.pump();
 
     expect(find.text('E-mail inválido'), findsOneWidget);
@@ -91,7 +140,7 @@ main() {
         [FormSignUpState(email: Email.pure(''))],
       ),
     );
-    await _loadPage(tester, formSignCubit);
+    await loadPage(tester);
     await tester.pump();
 
     expect(find.text('Campo obrigatório'), findsOneWidget);
@@ -106,7 +155,7 @@ main() {
         [FormSignUpState(password: Password.pure('123'))],
       ),
     );
-    await _loadPage(tester, formSignCubit);
+    await loadPage(tester);
     await tester.pump();
 
     expect(find.text('Senha muito curta'), findsOneWidget);
@@ -121,19 +170,77 @@ main() {
         [FormSignUpState(password: Password.pure(''))],
       ),
     );
-    await _loadPage(tester, formSignCubit);
+    await loadPage(tester);
     await tester.pump();
 
     expect(find.text('Campo obrigatório'), findsOneWidget);
   });
-}
 
-Future _loadPage(WidgetTester tester, FormSignUpCubitSpy formSignCubit) async {
-  await tester.pumpWidget(
-    MaterialApp(
-        home: BlocProvider<FormSignUpCubit>.value(
-      value: formSignCubit,
-      child: SignUpPage(),
-    )),
-  );
+  testWidgets('Should show snackBar if unexpected ocurrs', (tester) async {
+    when(formSignCubit.state).thenReturn(FormSignUpState());
+
+    whenListen<FormSignUpState>(
+      formSignCubit,
+      Stream.fromIterable(
+        [
+          FormSignUpState(
+            errorMessage: UIError.unexpected.description,
+            status: FormzStatus.submissionFailure,
+          )
+        ],
+      ),
+    );
+
+    await loadPage(tester);
+    await tester.pump();
+
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.text(UIError.unexpected.description), findsOneWidget);
+  });
+
+  testWidgets('Should go to FeedPage if is Submission Success',
+      (WidgetTester tester) async {
+    when(formSignCubit.state).thenReturn(FormSignUpState());
+
+    whenListen<FormSignUpState>(
+      formSignCubit,
+      Stream.fromIterable(
+        [FormSignUpState(status: FormzStatus.submissionSuccess)],
+      ),
+    );
+
+    await loadPage(tester);
+
+    await tester.pumpAndSettle();
+
+    verify(navigatorObserver.didPush(any, any));
+    expect(find.byType(FeedPage), findsOneWidget);
+  });
+
+  testWidgets('Should go to LoginPage if tap in CreateAccountButton ',
+      (WidgetTester tester) async {
+    when(formSignCubit.state).thenReturn(FormSignUpState());
+    when(formLoginCubit.state).thenReturn(FormLoginState());
+
+    await loadPage(tester);
+
+    await tester.tap(find.text('Já tem conta? Fazer login'));
+    await tester.pump();
+
+    verify(navigatorObserver.didPush(any, any));
+    expect(find.byType(LoginPage), findsOneWidget);
+  });
+
+  testWidgets('Should pop page if Icons.close pressed',
+      (WidgetTester tester) async {
+    when(formSignCubit.state).thenReturn(FormSignUpState());
+    when(formLoginCubit.state).thenReturn(FormLoginState());
+
+    await loadPage(tester);
+
+    await tester.tap(find.byIcon(Icons.close));
+    await tester.pump();
+
+    verify(navigatorObserver.didPop(any, any));
+  });
 }
