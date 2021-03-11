@@ -164,8 +164,8 @@ main() {
     'Should call SaveCurrentAccount with correct values',
     build: () {
       when(addAccount.add(any)).thenAnswer(
-        (_) async =>
-            AccountEntity(token: token, id: 1, username: validUsername),
+        (_) async => AccountEntity(
+            token: token, id: 1, username: validUsername, email: 'email'),
       );
       return sut;
     },
@@ -177,10 +177,8 @@ main() {
     },
     verify: (_) {
       verify(saveCurrentAccount.save(AccountEntity(
-        token: token,
-        id: 1,
-        username: validUsername,
-      ))).called(1);
+              token: token, id: 1, username: validUsername, email: 'email')))
+          .called(1);
     },
   );
 
@@ -268,8 +266,8 @@ main() {
     'Should call UserManager with correct values',
     build: () {
       when(addAccount.add(any)).thenAnswer(
-        (_) async =>
-            AccountEntity(token: token, id: 1, username: validUsername),
+        (_) async => AccountEntity(
+            token: token, id: 1, username: validUsername, email: 'email'),
       );
       return sut;
     },
@@ -283,10 +281,7 @@ main() {
       verify(
         userManager.addUser(
           AccountEntity(
-            token: token,
-            id: 1,
-            username: validUsername,
-          ),
+              token: token, id: 1, username: validUsername, email: 'email'),
         ),
       ).called(1);
     },

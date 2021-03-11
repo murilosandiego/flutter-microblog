@@ -17,6 +17,8 @@ void main() {
   String token;
   String username;
   int id;
+  String email;
+
   mockSuccess(accountModel) {
     final accountEncoded = jsonEncode(accountModel.toJson());
 
@@ -28,15 +30,12 @@ void main() {
     localStorage = LocalStorageSpy();
     sut = LocalLoadCurrentAccount(localStorage: localStorage);
     token = faker.guid.guid();
-
+    email = faker.internet.email();
     username = faker.person.name();
     id = faker.randomGenerator.integer(2);
 
-    final accountModel = AccountModel(
-      token: token,
-      username: username,
-      id: id,
-    );
+    final accountModel =
+        AccountModel(token: token, username: username, id: id, email: email);
 
     mockSuccess(accountModel);
   });
@@ -50,13 +49,8 @@ void main() {
   test('Shoud return an AccountEntity', () async {
     final account = await sut.load();
 
-    expect(
-        account,
-        AccountEntity(
-          token: token,
-          username: username,
-          id: id,
-        ));
+    expect(account,
+        AccountEntity(token: token, username: username, id: id, email: email));
   });
 
   test('Shoud throw DomainError.unexpected if LocalStorage throws', () {

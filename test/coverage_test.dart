@@ -54,6 +54,7 @@ import 'package:boticario_news/ui/components/reload_screen.dart';
 import 'package:boticario_news/ui/helpers/app_snackbar.dart';
 import 'package:boticario_news/ui/helpers/form_validators.dart';
 import 'package:boticario_news/ui/helpers/ui_error.dart';
+import 'package:boticario_news/ui/helpers/user_manager.dart';
 import 'package:boticario_news/ui/pages/feed/components/botton_sheet.dart';
 import 'package:boticario_news/ui/pages/feed/components/modal_post.dart';
 import 'package:boticario_news/ui/pages/feed/components/modal_remove.dart';

@@ -103,7 +103,8 @@ main() {
     'Should call saveCurrentAccount with correct values',
     build: () {
       when(authetication.auth(any)).thenAnswer(
-        (_) async => AccountEntity(token: 'token', id: 1, username: 'user'),
+        (_) async => AccountEntity(
+            token: 'token', id: 1, username: 'user', email: 'email'),
       );
       return sut;
     },
@@ -113,8 +114,8 @@ main() {
       await cubit.auth();
     },
     verify: (_) {
-      verify(saveCurrentAccount
-              .save(AccountEntity(token: 'token', id: 1, username: 'user')))
+      verify(saveCurrentAccount.save(AccountEntity(
+              token: 'token', id: 1, username: 'user', email: 'email')))
           .called(1);
     },
   );
@@ -205,7 +206,8 @@ main() {
     'Should call UserManager with correct values',
     build: () {
       when(authetication.auth(any)).thenAnswer(
-        (_) async => AccountEntity(token: 'token', id: 1, username: 'user'),
+        (_) async => AccountEntity(
+            token: 'token', id: 1, username: 'user', email: 'email'),
       );
       return sut;
     },
@@ -215,8 +217,8 @@ main() {
       await cubit.auth();
     },
     verify: (_) {
-      verify(userManager
-              .addUser(AccountEntity(token: 'token', id: 1, username: 'user')))
+      verify(userManager.addUser(AccountEntity(
+              token: 'token', id: 1, username: 'user', email: 'email')))
           .called(1);
     },
   );

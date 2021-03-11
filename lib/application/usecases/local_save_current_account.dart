@@ -17,10 +17,10 @@ class LocalSaveCurrentAccount implements SaveCurrentAccount {
   Future<void> save(AccountEntity account) async {
     try {
       final accountModel = AccountModel(
-        token: account.token,
-        username: account.username,
-        id: account.id,
-      );
+          token: account.token,
+          username: account.username,
+          id: account.id,
+          email: account.email);
 
       await localStorage.save(key: 'account', value: jsonEncode(accountModel));
     } catch (_) {

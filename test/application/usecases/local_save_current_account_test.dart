@@ -21,19 +21,19 @@ void main() {
     localStorage = LocalStorageSpy();
     sut = LocalSaveCurrentAccount(localStorage: localStorage);
     account = AccountEntity(
-      token: faker.guid.guid(),
-      id: faker.randomGenerator.integer(3),
-      username: faker.person.name(),
-    );
+        token: faker.guid.guid(),
+        id: faker.randomGenerator.integer(3),
+        username: faker.person.name(),
+        email: faker.internet.email());
   });
 
   test('Should call the save method of LocalStorage with correct values',
       () async {
     final accountModel = AccountModel(
-      token: account.token,
-      username: account.username,
-      id: account.id,
-    );
+        token: account.token,
+        username: account.username,
+        id: account.id,
+        email: account.email);
 
     await sut.save(account);
 
