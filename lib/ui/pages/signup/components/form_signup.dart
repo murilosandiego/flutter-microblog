@@ -23,7 +23,7 @@ class FormSignup extends StatelessWidget {
           );
         }
         if (state.status.isSubmissionFailure) {
-          Scaffold.of(context).showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.errorMessage)),
           );
         }

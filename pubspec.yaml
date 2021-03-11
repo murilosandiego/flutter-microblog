@@ -32,8 +32,9 @@ dependencies:
   flutter_bloc: ^6.1.2
   formz: ^0.3.2
   http: ^0.12.2
-  intl: ^0.16.1
+  intl:
   localstorage: ^3.0.6+9
+  shared_preferences: 
   simple_validator: ^0.0.1
 
 dev_dependencies:

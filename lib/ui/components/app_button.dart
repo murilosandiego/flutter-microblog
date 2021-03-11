@@ -30,6 +30,7 @@ class AppButton extends StatelessWidget {
       padding: padding,
       height: 48,
       width: double.infinity,
+      // ignore: deprecated_member_use
       child: FlatButton(
         disabledColor: color == null
             ? Theme.of(context).primaryColor.withOpacity(0.5)

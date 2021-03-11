@@ -16,6 +16,7 @@ class ReloadScreen extends StatelessWidget {
           Text(error,
               style: TextStyle(fontSize: 16), textAlign: TextAlign.center),
           SizedBox(height: 10),
+          // ignore: deprecated_member_use
           RaisedButton(
             onPressed: reload,
             child: Text('Recarregar'),

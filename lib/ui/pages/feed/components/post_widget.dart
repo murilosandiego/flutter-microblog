@@ -77,6 +77,7 @@ class _Header extends StatelessWidget {
         Container(
           height: 25,
           width: 25,
+          // ignore: deprecated_member_use
           child: FlatButton(
             textColor: Colors.black54,
             padding: EdgeInsets.zero,

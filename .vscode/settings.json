@@ -1,0 +1,6 @@
+{
+  "dart.flutterSdkPath": ".fvm/flutter_sdk",
+  "files.exclude": {
+    "**/*.g.dart": true
+  }
+}
