@@ -18,4 +18,9 @@ class LocalStorageAdapter implements CacheLocalStorage {
     final data = await localStorage.getItem(key);
     return data;
   }
+
+  @override
+  Future<void> clear() async {
+    await localStorage.clear();
+  }
 }

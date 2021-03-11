@@ -59,4 +59,20 @@ main() {
       expect(future, throwsA(TypeMatcher<Exception>()));
     });
   });
+
+  group('Clear method', () {
+    test('Should call LocalStorage with correct values', () async {
+      await sut.clear();
+
+      verify(localStorage.clear());
+    });
+
+    test('Should throw Exception if LocalStorage fails', () {
+      when(localStorage.clear()).thenThrow(Exception());
+
+      final future = sut.clear();
+
+      expect(future, throwsA(isA<Exception>()));
+    });
+  });
 }
