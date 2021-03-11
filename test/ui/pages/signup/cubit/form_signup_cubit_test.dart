@@ -5,6 +5,7 @@ import 'package:boticario_news/domain/usecases/add_account.dart';
 import 'package:boticario_news/domain/usecases/save_current_account.dart';
 import 'package:boticario_news/ui/helpers/form_validators.dart';
 import 'package:boticario_news/ui/helpers/ui_error.dart';
+import 'package:boticario_news/ui/helpers/user_manager.dart';
 import 'package:boticario_news/ui/pages/signup/cubit/form_signup_cubit.dart';
 import 'package:boticario_news/ui/pages/signup/cubit/form_signup_state.dart';
 import 'package:faker/faker.dart';
@@ -16,10 +17,13 @@ class AddAccountSpy extends Mock implements AddAccount {}
 
 class SaveCurrentAccountSpy extends Mock implements SaveCurrentAccount {}
 
+class UserManagerSpy extends Mock implements UserManager {}
+
 main() {
   FormSignUpCubit sut;
   AddAccountSpy addAccount;
   SaveCurrentAccountSpy saveCurrentAccount;
+  UserManagerSpy userManager;
 
   final String validUsername = faker.person.firstName();
   final String validEmail = faker.internet.email();
@@ -57,10 +61,12 @@ main() {
   setUp(() {
     addAccount = AddAccountSpy();
     saveCurrentAccount = SaveCurrentAccountSpy();
+    userManager = UserManagerSpy();
 
     sut = FormSignUpCubit(
       addAccount: addAccount,
       saveCurrentAccount: saveCurrentAccount,
+      userManager: userManager,
     );
   });
 
@@ -256,5 +262,33 @@ main() {
         errorMessage: '',
       )
     ],
+  );
+
+  blocTest<FormSignUpCubit, FormSignUpState>(
+    'Should call UserManager with correct values',
+    build: () {
+      when(addAccount.add(any)).thenAnswer(
+        (_) async =>
+            AccountEntity(token: token, id: 1, username: validUsername),
+      );
+      return sut;
+    },
+    act: (cubit) async {
+      cubit.handleName(validUsername);
+      cubit.handlePassword(validPassword);
+      cubit.handleEmail(validEmail);
+      await cubit.add();
+    },
+    verify: (_) {
+      verify(
+        userManager.addUser(
+          AccountEntity(
+            token: token,
+            id: 1,
+            username: validUsername,
+          ),
+        ),
+      ).called(1);
+    },
   );
 }

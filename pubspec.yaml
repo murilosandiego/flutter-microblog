@@ -35,7 +35,7 @@ dependencies:
   intl:
   localstorage: ^3.0.6+9
   shared_preferences: 
-  simple_validator: ^0.0.1
+  provider:
 
 dev_dependencies:
   flutter_test:

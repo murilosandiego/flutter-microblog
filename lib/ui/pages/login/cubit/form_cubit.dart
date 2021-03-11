@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:boticario_news/ui/helpers/ui_error.dart';
+import 'package:boticario_news/ui/helpers/user_manager.dart';
 import 'package:formz/formz.dart';
 import 'package:meta/meta.dart';
 
@@ -12,9 +13,12 @@ import 'form_state.dart';
 class FormLoginCubit extends Cubit<FormLoginState> {
   final Authetication authetication;
   final SaveCurrentAccount saveCurrentAccount;
+  final UserManager userManager;
+
   FormLoginCubit({
     @required this.authetication,
     @required this.saveCurrentAccount,
+    @required this.userManager,
   }) : super(FormLoginState());
 
   Future<void> auth() async {
@@ -29,6 +33,8 @@ class FormLoginCubit extends Cubit<FormLoginState> {
       ));
 
       await saveCurrentAccount.save(account);
+
+      userManager.addUser(account);
 
       emit(state.copyWith(status: FormzStatus.submissionSuccess));
     } on DomainError catch (error) {

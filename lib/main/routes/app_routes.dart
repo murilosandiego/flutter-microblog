@@ -1,3 +1,4 @@
+import 'package:boticario_news/ui/helpers/user_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localstorage/localstorage.dart';
@@ -42,10 +43,11 @@ abstract class AppRoutes {
 
   static BlocProvider<FormSignUpCubit> _makeSignUpPage() {
     return BlocProvider(
-      create: (_) => FormSignUpCubit(
+      create: (context) => FormSignUpCubit(
         addAccount: AddAccountFactory.makeRemoteAddAccount(),
         saveCurrentAccount:
             SaveCurrentAccountFactory.makeLocalSaveCurrentAccount(),
+        userManager: context.read<UserManager>(),
       ),
       child: SignUpPage(),
     );
@@ -67,10 +69,10 @@ abstract class AppRoutes {
   static BlocProvider<FormLoginCubit> _makeLoginPage() {
     return BlocProvider(
       create: (context) => FormLoginCubit(
-        authetication: AutheticationFactory.makeRemoteAuthetication(),
-        saveCurrentAccount:
-            SaveCurrentAccountFactory.makeLocalSaveCurrentAccount(),
-      ),
+          authetication: AutheticationFactory.makeRemoteAuthetication(),
+          saveCurrentAccount:
+              SaveCurrentAccountFactory.makeLocalSaveCurrentAccount(),
+          userManager: context.read<UserManager>()),
       child: LoginPage(),
     );
   }

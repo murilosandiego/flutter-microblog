@@ -428,7 +428,7 @@ packages:
     source: hosted
     version: "4.1.0"
   provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: provider
       url: "https://pub.dartlang.org"
@@ -518,13 +518,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.3"
-  simple_validator:
-    dependency: "direct main"
-    description:
-      name: simple_validator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

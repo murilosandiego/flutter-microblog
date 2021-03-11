@@ -5,13 +5,13 @@ class UserManager extends ChangeNotifier {
   String _username;
   int _id;
 
-  addUser(AccountEntity account) {
+  void addUser(AccountEntity account) {
     _username = account.username;
     _id = account.id;
     notifyListeners();
   }
 
-  removeUser() {
+  void removeUser() {
     _username = null;
     _id = null;
     notifyListeners();

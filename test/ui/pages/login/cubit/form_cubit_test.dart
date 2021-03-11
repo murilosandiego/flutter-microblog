@@ -5,6 +5,7 @@ import 'package:boticario_news/domain/usecases/authentication.dart';
 import 'package:boticario_news/domain/usecases/save_current_account.dart';
 import 'package:boticario_news/ui/helpers/form_validators.dart';
 import 'package:boticario_news/ui/helpers/ui_error.dart';
+import 'package:boticario_news/ui/helpers/user_manager.dart';
 import 'package:boticario_news/ui/pages/login/cubit/form_cubit.dart';
 import 'package:boticario_news/ui/pages/login/cubit/form_state.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,18 +16,23 @@ class AuthenticationSpy extends Mock implements Authetication {}
 
 class SaveAccountSpy extends Mock implements SaveCurrentAccount {}
 
+class UserManagerSpy extends Mock implements UserManager {}
+
 main() {
   FormLoginCubit sut;
   AuthenticationSpy authetication;
   SaveAccountSpy saveCurrentAccount;
+  UserManagerSpy userManager;
 
   setUp(() {
     authetication = AuthenticationSpy();
     saveCurrentAccount = SaveAccountSpy();
+    userManager = UserManagerSpy();
 
     sut = FormLoginCubit(
       authetication: authetication,
       saveCurrentAccount: saveCurrentAccount,
+      userManager: userManager,
     );
   });
 
@@ -193,5 +199,25 @@ main() {
         errorMessage: '',
       )
     ],
+  );
+
+  blocTest<FormLoginCubit, FormLoginState>(
+    'Should call UserManager with correct values',
+    build: () {
+      when(authetication.auth(any)).thenAnswer(
+        (_) async => AccountEntity(token: 'token', id: 1, username: 'user'),
+      );
+      return sut;
+    },
+    act: (cubit) async {
+      cubit.handlePassword('123456');
+      cubit.handleEmail('mail@mail.com');
+      await cubit.auth();
+    },
+    verify: (_) {
+      verify(userManager
+              .addUser(AccountEntity(token: 'token', id: 1, username: 'user')))
+          .called(1);
+    },
   );
 }
