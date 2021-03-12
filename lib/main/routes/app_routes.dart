@@ -82,8 +82,9 @@ abstract class AppRoutes {
 
   static BlocProvider<SplashCubit> _makeSplashPage() {
     return BlocProvider(
-      create: (_) => SplashCubit(
+      create: (context) => SplashCubit(
         loadCurrentAccount: makeLocalLoadCurrentAccount(),
+        userManager: context.read<UserManager>(),
       ),
       child: SplashPage(),
     );
