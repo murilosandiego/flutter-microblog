@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:boticario_news/application/storage/local_storage.dart';
 import 'package:boticario_news/domain/errors/domain_error.dart';
 import 'package:boticario_news/domain/usecases/load_news.dart';
 import 'package:boticario_news/domain/usecases/load_posts.dart';
@@ -9,7 +10,6 @@ import 'package:boticario_news/ui/pages/feed/cubit/feed_cubit.dart';
 import 'package:boticario_news/ui/pages/feed/cubit/feed_state.dart';
 import 'package:boticario_news/ui/pages/feed/post_viewmodel.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:localstorage/localstorage.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../mocks/mocks.dart';
@@ -22,7 +22,7 @@ class SavePostSpy extends Mock implements SavePost {}
 
 class RemovePostSpy extends Mock implements RemovePost {}
 
-class LocalStorageSpy extends Mock implements LocalStorage {}
+class LocalStorageSpy extends Mock implements CacheLocalStorage {}
 
 void main() {
   FeedCubit sut;
@@ -77,6 +77,18 @@ void main() {
           user: newsList[1].user.name,
         ),
       ])
+    ],
+  );
+
+  blocTest(
+    'Should emits FeedLoaded on failure',
+    build: () {
+      mockError();
+      return sut;
+    },
+    act: (sut) => sut.load(),
+    expect: [
+      FeedError(UIError.unexpected.description),
     ],
   );
 

@@ -1,8 +1,8 @@
-import 'package:boticario_news/ui/helpers/user_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localstorage/localstorage.dart';
 
+import '../../infra/storage/local_storage_adater.dart';
+import '../../ui/helpers/user_manager.dart';
 import '../../ui/pages/feed/cubit/feed_cubit.dart';
 import '../../ui/pages/feed/feed_page.dart';
 import '../../ui/pages/login/cubit/form_cubit.dart';
@@ -20,6 +20,7 @@ import '../factories/usecases/load_posts_factory.dart';
 import '../factories/usecases/remove_post_factory.dart';
 import '../factories/usecases/save_current_account_factory.dart';
 import '../factories/usecases/save_post_factory.dart';
+import '../singletons/local_storage_singleton.dart';
 
 abstract class AppRoutes {
   static const splash = '/';
@@ -60,7 +61,9 @@ abstract class AppRoutes {
         loadPosts: LoadPostsFactory.makeRemoteLoadNews(),
         savePost: SavePostFactory.makeRemoteSavePost(),
         removePost: RemovePostFactory.makeRemoteRemovePost(),
-        localStorage: LocalStorage('app_local'),
+        localStorage: LocalStorageAdapter(
+          localStorage: LocalStorage.instance.preferences,
+        ),
       ),
       child: FeedPage(),
     );

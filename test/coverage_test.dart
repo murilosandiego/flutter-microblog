@@ -44,6 +44,7 @@ import 'package:boticario_news/main/factories/usecases/remove_post_factory.dart'
 import 'package:boticario_news/main/factories/usecases/save_current_account_factory.dart';
 import 'package:boticario_news/main/factories/usecases/save_post_factory.dart';
 import 'package:boticario_news/main/routes/app_routes.dart';
+import 'package:boticario_news/main/singletons/local_storage_singleton.dart';
 import 'package:boticario_news/main.dart';
 import 'package:boticario_news/ui/components/app_button.dart';
 import 'package:boticario_news/ui/components/app_text_form_field.dart';

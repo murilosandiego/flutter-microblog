@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:localstorage/localstorage.dart';
 import 'package:meta/meta.dart';
 
+import '../../../../application/storage/local_storage.dart';
 import '../../../../domain/entities/post_entity.dart';
 import '../../../../domain/usecases/load_news.dart';
 import '../../../../domain/usecases/load_posts.dart';
@@ -17,7 +17,7 @@ class FeedCubit extends Cubit<FeedState> {
   final LoadPosts loadPosts;
   final SavePost savePost;
   final RemovePost removePost;
-  final LocalStorage localStorage;
+  final CacheLocalStorage localStorage;
 
   FeedCubit({
     @required this.loadNews,

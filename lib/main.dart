@@ -1,4 +1,5 @@
 import 'package:boticario_news/main/routes/app_routes.dart';
+import 'package:boticario_news/main/singletons/local_storage_singleton.dart';
 import 'package:boticario_news/ui/helpers/user_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'ui/components/app_theme.dart';
 
 void main() async {
+  await _initializer();
   runApp(MyApp());
 }
 
@@ -32,4 +34,9 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _initializer() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalStorage.instance.init();
 }

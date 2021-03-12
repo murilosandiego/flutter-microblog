@@ -1,10 +1,10 @@
 import 'package:boticario_news/infra/storage/local_storage_adater.dart';
 import 'package:faker/faker.dart';
-import 'package:localstorage/localstorage.dart' as LocalStorageLib;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-class LocalStorageSpy extends Mock implements LocalStorageLib.LocalStorage {}
+class LocalStorageSpy extends Mock implements SharedPreferences {}
 
 main() {
   LocalStorageSpy localStorage;
@@ -24,11 +24,11 @@ main() {
     test('Should call LocalStorage with correct values', () async {
       await sut.save(key: key, value: value);
 
-      verify(localStorage.setItem(key, value));
+      verify(localStorage.setString(key, value));
     });
 
     test('Should throw Exception if LocalStorage fails', () {
-      when(localStorage.setItem(any, any)).thenThrow(Exception());
+      when(localStorage.setString(any, any)).thenThrow(Exception());
 
       final future = sut.save(key: key, value: value);
 
@@ -40,11 +40,11 @@ main() {
     test('Should call LocalStorage with correct values', () async {
       await sut.fetch(key: key);
 
-      verify(localStorage.getItem(key));
+      verify(localStorage.getString(key));
     });
 
     test('Should return a value with success', () async {
-      when(localStorage.getItem(any)).thenAnswer((_) async => value);
+      when(localStorage.getString(any)).thenAnswer((_) => value);
 
       final valueResult = await sut.fetch(key: key);
 
@@ -52,7 +52,7 @@ main() {
     });
 
     test('Should throw Exception if LocalStorage fails', () {
-      when(localStorage.getItem(any)).thenThrow(Exception());
+      when(localStorage.getString(any)).thenThrow(Exception());
 
       final future = sut.fetch(key: key);
 
