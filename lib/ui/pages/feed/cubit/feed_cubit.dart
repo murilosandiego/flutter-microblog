@@ -39,7 +39,7 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
-  void logoutUser() async {
+  Future<void> logoutUser() async {
     try {
       emit(FeedLoading());
       await localStorage.clear();

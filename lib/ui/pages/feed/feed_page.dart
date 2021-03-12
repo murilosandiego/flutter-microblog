@@ -40,7 +40,7 @@ class FeedPage extends StatelessWidget {
             ),
             ListTile(
               title: Text('Sair'),
-              onTap: () => cubit.logoutUser(),
+              onTap: cubit.logoutUser,
               trailing: Icon(Icons.exit_to_app),
             )
           ],
