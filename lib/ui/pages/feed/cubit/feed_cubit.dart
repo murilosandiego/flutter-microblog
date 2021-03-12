@@ -45,7 +45,6 @@ class FeedCubit extends Cubit<FeedState> {
       await localStorage.clear();
       emit(LogoutUser());
     } catch (error) {
-      print(error);
       emit(FeedError(UIError.unexpected.description));
     }
   }

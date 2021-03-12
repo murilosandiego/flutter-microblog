@@ -36,9 +36,13 @@ void main() {
 
   mockError() => when(loadPosts.load()).thenThrow(DomainError.unexpected);
 
+  mockLocalStorageError() =>
+      when(localStorage.clear()).thenThrow(DomainError.unexpected);
+
   setUp(() {
     loadNews = LoadNewsSpy();
     loadPosts = LoadPostsSpy();
+    localStorage = LocalStorageSpy();
 
     sut = FeedCubit(
       loadNews: loadNews,
@@ -92,14 +96,36 @@ void main() {
     ],
   );
 
+  blocTest<FeedCubit, FeedState>(
+    'Should call localStorage.clear() with success',
+    build: () => sut,
+    act: (sut) => sut.logoutUser(),
+    verify: (_) {
+      verify(localStorage.clear()).called(1);
+    },
+  );
+
   blocTest(
-    'Should emits FeedLoaded on failure',
+    'Should emits [FeedLoading, FeedError] on logoutUser',
     build: () {
-      mockError();
       return sut;
     },
-    act: (sut) => sut.load(),
+    act: (sut) => sut.logoutUser(),
     expect: [
+      FeedLoading(),
+      LogoutUser(),
+    ],
+  );
+
+  blocTest<FeedCubit, FeedState>(
+    'Should emits [FeedLoading, FeedError] on failure',
+    build: () {
+      mockLocalStorageError();
+      return sut;
+    },
+    act: (sut) => sut.logoutUser(),
+    expect: [
+      FeedLoading(),
       FeedError(UIError.unexpected.description),
     ],
   );
