@@ -51,13 +51,14 @@ void main() {
       removePost: removePost,
       localStorage: localStorage,
     );
-
-    mockSuccessPost();
   });
 
   blocTest(
     'Should call loadPosts() once when load',
-    build: () => sut,
+    build: () {
+      mockSuccessPost();
+      return sut;
+    },
     act: (sut) => sut.load(),
     verify: (_) {
       verify(loadPosts.load()).called(1);
@@ -66,10 +67,13 @@ void main() {
 
   blocTest(
     'Should emits FeedLoaded on success',
-    build: () => sut,
+    build: () {
+      mockSuccessPost();
+      return sut;
+    },
     act: (sut) => sut.load(),
     expect: [
-      FeedLoaded([
+      FeedLoaded(news: [
         NewsViewModel(
           message: newsList[0].message.content,
           date: 'January 20, 2020',

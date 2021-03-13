@@ -31,10 +31,35 @@ class FeedCubit extends Cubit<FeedState> {
     try {
       final postsUsers = await loadPosts.load();
 
-      final news = postsUsers.map((post) => toViewModel(post)).toList();
+      final news = postsUsers.map((post) => _toViewModel(post)).toList();
 
-      emit(FeedLoaded(news));
+      emit(FeedLoaded(news: news));
     } catch (error) {
+      emit(FeedError(UIError.unexpected.description));
+    }
+  }
+
+  NewsViewModel _toViewModel(PostEntity post) {
+    return NewsViewModel(
+      id: post?.id,
+      message: post?.message?.content,
+      date: DateFormat(DateFormat.YEAR_MONTH_DAY)
+          .format(post?.message?.createdAt),
+      user: post?.user?.name,
+      userId: post?.user?.id,
+    );
+  }
+
+  Future<void> handleSavePost(String message) async {
+    try {
+      final post = await savePost.save(message: message);
+      final postViewModel = _toViewModel(post);
+
+      final List<NewsViewModel> updatedPosts =
+          List.of((state as FeedLoaded).news)..insert(0, postViewModel);
+
+      emit(FeedLoaded(news: updatedPosts));
+    } catch (e) {
       emit(FeedError(UIError.unexpected.description));
     }
   }
@@ -47,16 +72,5 @@ class FeedCubit extends Cubit<FeedState> {
     } catch (error) {
       emit(FeedError(UIError.unexpected.description));
     }
-  }
-
-  NewsViewModel toViewModel(PostEntity post) {
-    return NewsViewModel(
-      id: post?.id,
-      message: post?.message?.content,
-      date: DateFormat(DateFormat.YEAR_MONTH_DAY)
-          .format(post?.message?.createdAt),
-      user: post?.user?.name,
-      userId: post?.user?.id,
-    );
   }
 }

@@ -17,7 +17,8 @@ class RemoteLoadPosts implements LoadPosts {
       final response = await httpClient.request(url: url, method: 'get');
       return (response as List)
           .map((json) => PostModel.fromJsonApiPosts(json))
-          .toList();
+          .toList()
+            ..sort((a, b) => b.id.compareTo(a.id));
     } catch (_) {
       throw DomainError.unexpected;
     }

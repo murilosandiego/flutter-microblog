@@ -69,7 +69,7 @@ main() {
 
   testWidgets('Should show empty list when state is FeedLoaded with no posts',
       (WidgetTester tester) async {
-    when(feedCubit.state).thenAnswer((_) => FeedLoaded([]));
+    when(feedCubit.state).thenAnswer((_) => FeedLoaded(news: []));
 
     await _loadPage(tester);
 
@@ -82,7 +82,7 @@ main() {
   testWidgets('Should show list when state is FeedLoaded with posts',
       (WidgetTester tester) async {
     when(feedCubit.state)
-        .thenAnswer((_) => FeedLoaded(_newsMock(message, user)));
+        .thenAnswer((_) => FeedLoaded(news: _newsMock(message, user)));
 
     await _loadPage(tester);
 
@@ -164,7 +164,7 @@ main() {
   testWidgets('Should call loadPosts if fling RefreshIndicator',
       (WidgetTester tester) async {
     when(feedCubit.state)
-        .thenAnswer((_) => FeedLoaded(_newsMock(message, user)));
+        .thenAnswer((_) => FeedLoaded(news: _newsMock(message, user)));
 
     when(feedCubit.load())
         .thenAnswer((_) async => Future.delayed(Duration.zero));
