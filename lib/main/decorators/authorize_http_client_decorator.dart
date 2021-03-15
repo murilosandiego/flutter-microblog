@@ -24,6 +24,16 @@ class AuthorizeHttpClientDecorator implements HttpClient {
       final account = await loadCurrentAccount.load();
       final authorizedHeaders = headers ?? {}
         ..addAll({'Authorization': 'Bearer ${account.token}'});
+
+      if (body != null) {
+        final bodyUser = {
+          "users_permissions_user": {
+            "id": "${account.id}",
+          }
+        };
+        body..addAll(bodyUser);
+      }
+
       return await decoratee.request(
           url: url, method: method, body: body, headers: authorizedHeaders);
     } catch (error) {

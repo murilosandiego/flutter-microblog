@@ -19,9 +19,6 @@ class RemoteSavePost implements SavePost {
   Future<PostEntity> save({@required String message, int postId}) async {
     final body = {
       "message": {"content": message},
-      "users_permissions_user": {
-        "id": 2,
-      }
     };
     try {
       final httpResponse = await httpClient.request(
