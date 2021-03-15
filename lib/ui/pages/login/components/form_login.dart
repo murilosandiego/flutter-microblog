@@ -6,9 +6,9 @@ import '../../../../main/routes/app_routes.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_form_field.dart';
 import '../../../components/create_account_button.dart';
+import '../../../helpers/form_validators.dart';
 import '../cubit/form_cubit.dart';
 import '../cubit/form_state.dart';
-import '../../../helpers/form_validators.dart';
 
 class FormLogin extends StatelessWidget {
   @override

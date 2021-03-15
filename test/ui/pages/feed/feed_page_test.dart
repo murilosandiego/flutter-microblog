@@ -19,14 +19,15 @@ class FeedCubitSpy extends MockBloc<FeedState> implements FeedCubit {}
 class NavigatorObserverSpy extends Mock implements NavigatorObserver {}
 
 main() {
-  FeedCubitSpy feedCubit;
+  FeedCubitSpy cubit;
   NavigatorObserver navigatorObserver;
   String user;
   String email;
   String message;
+  final GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
 
   setUp(() {
-    feedCubit = FeedCubitSpy();
+    cubit = FeedCubitSpy();
     user = faker.person.name();
     email = faker.internet.email();
     navigatorObserver = NavigatorObserverSpy();
@@ -46,8 +47,9 @@ main() {
             AccountEntity(token: '', id: 1, username: user, email: email),
           ),
         child: MultiBlocProvider(
-          providers: [BlocProvider<FeedCubit>.value(value: feedCubit)],
+          providers: [BlocProvider<FeedCubit>.value(value: cubit)],
           child: MaterialApp(
+            navigatorKey: navigator,
             initialRoute: AppRoutes.feed,
             routes: routes,
             navigatorObservers: [navigatorObserver],
@@ -59,7 +61,7 @@ main() {
 
   testWidgets('Should show loading when states is FeedLoading',
       (WidgetTester tester) async {
-    when(feedCubit.state).thenAnswer((_) => FeedLoading());
+    when(cubit.state).thenAnswer((_) => FeedLoading());
 
     await _loadPage(tester);
 
@@ -69,7 +71,7 @@ main() {
 
   testWidgets('Should show empty list when state is FeedLoaded with no posts',
       (WidgetTester tester) async {
-    when(feedCubit.state).thenAnswer((_) => FeedLoaded([]));
+    when(cubit.state).thenAnswer((_) => FeedLoaded(news: []));
 
     await _loadPage(tester);
 
@@ -81,8 +83,8 @@ main() {
 
   testWidgets('Should show list when state is FeedLoaded with posts',
       (WidgetTester tester) async {
-    when(feedCubit.state)
-        .thenAnswer((_) => FeedLoaded(_newsMock(message, user)));
+    when(cubit.state)
+        .thenAnswer((_) => FeedLoaded(news: _newsMock(message, user)));
 
     await _loadPage(tester);
 
@@ -96,7 +98,7 @@ main() {
 
   testWidgets('Should show ReloadScreen widget when states is FeedError',
       (WidgetTester tester) async {
-    when(feedCubit.state).thenAnswer((_) => FeedError('error'));
+    when(cubit.state).thenAnswer((_) => FeedError('error'));
 
     await _loadPage(tester);
 
@@ -106,11 +108,11 @@ main() {
 
   testWidgets('Should call loadPosts on reload click',
       (WidgetTester tester) async {
-    when(feedCubit.state).thenAnswer((_) => FeedError('error'));
+    when(cubit.state).thenAnswer((_) => FeedError('error'));
 
     await _loadPage(tester);
     await tester.tap(find.text('Recarregar'));
-    verify(feedCubit.load()).called(2);
+    verify(cubit.load()).called(2);
   });
 
   testWidgets('Should show Drawer when tap in menu icon',
@@ -130,7 +132,7 @@ main() {
 
   testWidgets('Should call logoutUser when tap in Sair',
       (WidgetTester tester) async {
-    when(feedCubit.state).thenReturn(FeedInitial());
+    when(cubit.state).thenReturn(FeedInitial());
 
     await _loadPage(tester);
 
@@ -143,10 +145,10 @@ main() {
 
   testWidgets('Should navigate to WelcomePage if state is LogoutUser',
       (WidgetTester tester) async {
-    when(feedCubit.state).thenReturn(FeedInitial());
+    when(cubit.state).thenReturn(FeedInitial());
 
     whenListen<FeedState>(
-      feedCubit,
+      cubit,
       Stream.fromIterable(
         [
           LogoutUser(),
@@ -163,11 +165,10 @@ main() {
 
   testWidgets('Should call loadPosts if fling RefreshIndicator',
       (WidgetTester tester) async {
-    when(feedCubit.state)
-        .thenAnswer((_) => FeedLoaded(_newsMock(message, user)));
+    when(cubit.state)
+        .thenAnswer((_) => FeedLoaded(news: _newsMock(message, user)));
 
-    when(feedCubit.load())
-        .thenAnswer((_) async => Future.delayed(Duration.zero));
+    when(cubit.load()).thenAnswer((_) async => Future.delayed(Duration.zero));
 
     await _loadPage(tester);
 
@@ -177,7 +178,41 @@ main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pump(const Duration(seconds: 1));
 
-    verify(feedCubit.load());
+    verify(cubit.load());
+  });
+
+  testWidgets(
+      'Should show Alert when tap in floating button and call handleSavePost if has message',
+      (WidgetTester tester) async {
+    await _loadPage(tester);
+
+    expect(find.byType(AlertDialog), findsNothing);
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pump();
+
+    expect(find.byType(AlertDialog), findsOneWidget);
+
+    navigator.currentState.pop(message);
+    await tester.pump();
+
+    verify(cubit.handleSavePost(message));
+  });
+
+  testWidgets(
+      'Should show Alert when tap in floating button and never call handleSavePost if not has message',
+      (WidgetTester tester) async {
+    await _loadPage(tester);
+
+    expect(find.byType(AlertDialog), findsNothing);
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pump();
+
+    navigator.currentState.pop();
+    await tester.pump();
+
+    verifyNever(cubit.handleSavePost(any));
   });
 }
 

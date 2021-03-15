@@ -59,8 +59,8 @@ void main() {
     final news = await sut.load();
 
     expect(news, isA<List<PostEntity>>());
-    expect(news[0].user.name, equals('juca'));
-    expect(news[0].message.content, equals('Vai que da'));
+    expect(news[1].user.name, equals('juca'));
+    expect(news[1].message.content, equals('Vai que da'));
   });
 
   test('Should throw UnexpectedError if HttpClient not returns 200', () {

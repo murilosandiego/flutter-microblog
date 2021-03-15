@@ -74,3 +74,28 @@ extension NameInputErrorMessageExtension on NameInput {
     return this.error == NameValidationError.empty ? 'Campo obrigatório' : null;
   }
 }
+
+enum MessageValidationError { invalid, empty, isNull }
+
+class MessageInput extends FormzInput<String, MessageValidationError> {
+  const MessageInput.pure([String value = '']) : super.pure(value);
+  const MessageInput.dirty([String value = '']) : super.dirty(value);
+
+  @override
+  MessageValidationError validator(String value) {
+    if (value == null) return MessageValidationError.isNull;
+    if (value.isEmpty) return MessageValidationError.empty;
+    return value.length <= 280 ? null : MessageValidationError.invalid;
+  }
+}
+
+extension MessageInputErrorMessageExtension on MessageInput {
+  String get errorMessage {
+    if (this.error == MessageValidationError.isNull) return null;
+    if (this.error == MessageValidationError.invalid)
+      return 'Messagem muito longa';
+    return this.error == MessageValidationError.empty
+        ? 'Campo obrigatório'
+        : null;
+  }
+}

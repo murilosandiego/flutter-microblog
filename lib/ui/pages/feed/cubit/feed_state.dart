@@ -17,9 +17,12 @@ class FeedLoading extends FeedState {
 class FeedLoaded extends FeedState {
   final List<NewsViewModel> news;
 
-  FeedLoaded(this.news);
+  FeedLoaded({this.news});
   @override
   List<Object> get props => [news];
+
+  @override
+  bool get stringify => true;
 }
 
 class FeedError extends FeedState {
