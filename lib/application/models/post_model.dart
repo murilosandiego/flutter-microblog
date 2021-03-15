@@ -13,11 +13,6 @@ class PostModel extends PostEntity {
   final MessageModel message;
   final int id;
 
-  factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
-        user: UserModel.fromJson(json["user"]),
-        message: MessageModel.fromJson(json["message"]),
-      );
-
   factory PostModel.fromJsonApiPosts(Map<String, dynamic> json) => PostModel(
         id: json["id"],
         user: json["users_permissions_user"] == null
@@ -30,9 +25,4 @@ class PostModel extends PostEntity {
             content: json["message"]["content"],
             createdAt: DateTime.parse(json["created_at"])),
       );
-
-  Map<String, dynamic> toJson() => {
-        "user": user.toJson(),
-        "message": message.toJson(),
-      };
 }

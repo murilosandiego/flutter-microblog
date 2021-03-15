@@ -13,7 +13,6 @@ import 'package:boticario_news/application/usecases/local_load_current_account.d
 import 'package:boticario_news/application/usecases/local_save_current_account.dart';
 import 'package:boticario_news/application/usecases/remote_add_account.dart';
 import 'package:boticario_news/application/usecases/remote_authentication.dart';
-import 'package:boticario_news/application/usecases/remote_load_news.dart';
 import 'package:boticario_news/application/usecases/remote_load_posts.dart';
 import 'package:boticario_news/application/usecases/remote_remove_post.dart';
 import 'package:boticario_news/application/usecases/remote_save_post.dart';
@@ -25,7 +24,6 @@ import 'package:boticario_news/domain/errors/domain_error.dart';
 import 'package:boticario_news/domain/usecases/add_account.dart';
 import 'package:boticario_news/domain/usecases/authentication.dart';
 import 'package:boticario_news/domain/usecases/load_current_account.dart';
-import 'package:boticario_news/domain/usecases/load_news.dart';
 import 'package:boticario_news/domain/usecases/load_posts.dart';
 import 'package:boticario_news/domain/usecases/remove_post.dart';
 import 'package:boticario_news/domain/usecases/save_current_account.dart';
@@ -38,7 +36,6 @@ import 'package:boticario_news/main/factories/storage/cache_local_storage_factor
 import 'package:boticario_news/main/factories/usecases/add_account_factory.dart';
 import 'package:boticario_news/main/factories/usecases/authetication.dart';
 import 'package:boticario_news/main/factories/usecases/load_current_account_factory.dart';
-import 'package:boticario_news/main/factories/usecases/load_news_factory.dart';
 import 'package:boticario_news/main/factories/usecases/load_posts_factory.dart';
 import 'package:boticario_news/main/factories/usecases/remove_post_factory.dart';
 import 'package:boticario_news/main/factories/usecases/save_current_account_factory.dart';

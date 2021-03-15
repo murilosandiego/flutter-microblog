@@ -15,7 +15,6 @@ import '../../ui/pages/welcome/welcome_page.dart';
 import '../factories/usecases/add_account_factory.dart';
 import '../factories/usecases/authetication.dart';
 import '../factories/usecases/load_current_account_factory.dart';
-import '../factories/usecases/load_news_factory.dart';
 import '../factories/usecases/load_posts_factory.dart';
 import '../factories/usecases/remove_post_factory.dart';
 import '../factories/usecases/save_current_account_factory.dart';
@@ -57,7 +56,6 @@ abstract class AppRoutes {
   static BlocProvider<FeedCubit> _makeFeedPage() {
     return BlocProvider(
       create: (_) => FeedCubit(
-        loadNews: LoadNewsFactory.makeRemoteLoadNews(),
         loadPosts: LoadPostsFactory.makeRemoteLoadNews(),
         savePost: SavePostFactory.makeRemoteSavePost(),
         removePost: RemovePostFactory.makeRemoteRemovePost(),

@@ -4,7 +4,6 @@ import 'package:meta/meta.dart';
 
 import '../../../../application/storage/local_storage.dart';
 import '../../../../domain/entities/post_entity.dart';
-import '../../../../domain/usecases/load_news.dart';
 import '../../../../domain/usecases/load_posts.dart';
 import '../../../../domain/usecases/remove_post.dart';
 import '../../../../domain/usecases/save_post.dart';
@@ -13,14 +12,12 @@ import '../post_viewmodel.dart';
 import 'feed_state.dart';
 
 class FeedCubit extends Cubit<FeedState> {
-  final LoadNews loadNews;
   final LoadPosts loadPosts;
   final SavePost savePost;
   final RemovePost removePost;
   final CacheLocalStorage localStorage;
 
   FeedCubit({
-    @required this.loadNews,
     @required this.loadPosts,
     @required this.savePost,
     @required this.removePost,
