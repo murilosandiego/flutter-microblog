@@ -5,7 +5,7 @@ import '../http/http_client_factory.dart';
 
 class LoadPostsFactory {
   static LoadPosts makeRemoteLoadNews() => RemoteLoadPosts(
-        httpClient: HttpClientFactory.makeHttpClientAdapter(),
+        httpClient: HttpClientFactory.makeAuthorizeHttpClientAdapter(),
         url: makeApiUrl('news'),
       );
 }

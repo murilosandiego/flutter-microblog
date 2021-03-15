@@ -5,7 +5,7 @@ import '../http/http_client_factory.dart';
 
 class SavePostFactory {
   static SavePost makeRemoteSavePost() => RemoteSavePost(
-        httpClient: HttpClientFactory.makeHttpClientAdapter(),
+        httpClient: HttpClientFactory.makeAuthorizeHttpClientAdapter(),
         url: makeApiUrl('news'),
       );
 }

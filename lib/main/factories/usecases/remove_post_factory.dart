@@ -5,7 +5,7 @@ import '../http/http_client_factory.dart';
 
 class RemovePostFactory {
   static RemovePost makeRemoteRemovePost() => RemoteRemovePost(
-        httpClient: HttpClientFactory.makeHttpClientAdapter(),
+        httpClient: HttpClientFactory.makeAuthorizeHttpClientAdapter(),
         url: makeApiUrl('news'),
       );
 }
