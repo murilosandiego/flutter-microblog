@@ -4,7 +4,6 @@ import 'package:boticario_news/domain/entities/message_entity.dart';
 import 'package:boticario_news/domain/entities/post_entity.dart';
 import 'package:boticario_news/domain/entities/user_entity.dart';
 import 'package:boticario_news/domain/errors/domain_error.dart';
-import 'package:boticario_news/domain/usecases/load_news.dart';
 import 'package:boticario_news/domain/usecases/load_posts.dart';
 import 'package:boticario_news/domain/usecases/remove_post.dart';
 import 'package:boticario_news/domain/usecases/save_post.dart';
@@ -18,8 +17,6 @@ import 'package:mockito/mockito.dart';
 
 import '../../../../mocks/mocks.dart';
 
-class LoadNewsSpy extends Mock implements LoadNews {}
-
 class LoadPostsSpy extends Mock implements LoadPosts {}
 
 class SavePostSpy extends Mock implements SavePost {}
@@ -30,7 +27,6 @@ class LocalStorageSpy extends Mock implements CacheLocalStorage {}
 
 void main() {
   FeedCubit sut;
-  LoadNewsSpy loadNews;
   LoadPostsSpy loadPosts;
   SavePostSpy savePost;
   RemovePostSpy removePost;
@@ -78,14 +74,12 @@ void main() {
       when(localStorage.clear()).thenThrow(DomainError.unexpected);
 
   setUp(() {
-    loadNews = LoadNewsSpy();
     loadPosts = LoadPostsSpy();
     localStorage = LocalStorageSpy();
     message = faker.lorem.sentence();
     savePost = SavePostSpy();
 
     sut = FeedCubit(
-      loadNews: loadNews,
       loadPosts: loadPosts,
       savePost: savePost,
       removePost: removePost,
