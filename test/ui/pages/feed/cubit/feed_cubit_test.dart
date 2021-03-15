@@ -32,6 +32,7 @@ void main() {
   RemovePostSpy removePost;
   LocalStorageSpy localStorage;
   String message;
+  int postId;
 
   makePosts() => [
         NewsViewModel(
@@ -78,6 +79,7 @@ void main() {
     localStorage = LocalStorageSpy();
     message = faker.lorem.sentence();
     savePost = SavePostSpy();
+    postId = faker.randomGenerator.integer(10);
 
     sut = FeedCubit(
       loadPosts: loadPosts,
@@ -156,11 +158,11 @@ void main() {
   );
 
   blocTest<FeedCubit, FeedState>(
-    'Should call SavePost once when save post',
+    'Should call SavePost once when create a post',
     build: () {
       return sut;
     },
-    act: (sut) => sut.handleSavePost(message),
+    act: (sut) => sut.handleSavePost(message: message),
     verify: (_) {
       verify(savePost.save(message: message)).called(1);
     },
@@ -173,7 +175,7 @@ void main() {
       return sut;
     },
     seed: FeedLoaded(news: makePosts()),
-    act: (sut) => sut.handleSavePost(message),
+    act: (sut) => sut.handleSavePost(message: message),
     expect: [
       FeedLoaded(
         news: makePosts()
@@ -195,7 +197,7 @@ void main() {
       mockSavePostError();
       return sut;
     },
-    act: (sut) => sut.handleSavePost(message),
+    act: (sut) => sut.handleSavePost(message: message, postId: postId),
     expect: [
       FeedError(UIError.unexpected.description),
     ],

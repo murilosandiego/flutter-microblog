@@ -196,7 +196,7 @@ main() {
     navigator.currentState.pop(message);
     await tester.pump();
 
-    verify(cubit.handleSavePost(message));
+    verify(cubit.handleSavePost(message: message));
   });
 
   testWidgets(
@@ -212,7 +212,7 @@ main() {
     navigator.currentState.pop();
     await tester.pump();
 
-    verifyNever(cubit.handleSavePost(any));
+    verifyNever(cubit.handleSavePost(message: message));
   });
 }
 

@@ -47,7 +47,7 @@ class FeedCubit extends Cubit<FeedState> {
     );
   }
 
-  Future<void> handleSavePost(String message) async {
+  Future<void> handleSavePost({@required String message, int postId}) async {
     try {
       final post = await savePost.save(message: message);
       final postViewModel = _toViewModel(post);

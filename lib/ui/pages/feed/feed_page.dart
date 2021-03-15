@@ -30,7 +30,7 @@ class FeedPage extends StatelessWidget {
         onPressed: () async {
           final message = await showModalPost(context);
           if (message != null) {
-            cubit.handleSavePost(message);
+            cubit.handleSavePost(message: message);
           }
         },
         child: Icon(Icons.post_add),
