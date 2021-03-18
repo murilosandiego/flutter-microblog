@@ -80,25 +80,25 @@ const apiResponsePosts = """
 
 List<PostEntity> newsList = [
   PostEntity(
-    id: faker.randomGenerator.integer(10),
+    id: 1,
     message: MessageEntity(
-      content: faker.lorem.sentence(),
+      content: 'Message 1',
       createdAt: DateTime(2020, 01, 20),
     ),
     user: UserEntity(
-      name: faker.person.name(),
-      id: faker.randomGenerator.integer(10),
+      name: 'user1',
+      id: 21,
     ),
   ),
   PostEntity(
-    id: faker.randomGenerator.integer(10),
+    id: 2,
     message: MessageEntity(
-      content: faker.lorem.sentence(),
+      content: 'Message 2',
       createdAt: DateTime(2018, 01, 14),
     ),
     user: UserEntity(
-      name: faker.person.name(),
-      id: faker.randomGenerator.integer(10),
+      name: 'user2',
+      id: 22,
     ),
   ),
 ];
@@ -114,6 +114,10 @@ final postsViewModel = newsList
         userId: post?.user?.id,
       ),
     )
+    .toList();
+
+final postsViewModelEdited = List.of(postsViewModel)
+    .map((e) => e.id == 2 ? e.copyWith(message: 'Editada') : e)
     .toList();
 
 final mockPost = PostEntity(

@@ -187,6 +187,14 @@ void main() {
   });
 
   group('Update post', () {
+    mockEditPost() => when(
+          savePost.save(
+              message: anyNamed('message'), postId: anyNamed('postId')),
+        ).thenAnswer(
+          (_) async => newsList[1].copyWith(
+              message: newsList[1].message.copyWith(content: 'Editada'), id: 2),
+        );
+
     blocTest<FeedCubit, FeedState>(
       'Should call SavePost once when update a post',
       build: () {
@@ -196,6 +204,19 @@ void main() {
       verify: (_) {
         verify(savePost.save(message: message, postId: postId)).called(1);
       },
+    );
+
+    blocTest<FeedCubit, FeedState>(
+      'Should update a list of posts',
+      build: () {
+        mockEditPost();
+        return sut;
+      },
+      seed: FeedLoaded(news: postsViewModel),
+      act: (sut) => sut.handleSavePost(message: message, postId: 2),
+      expect: [
+        FeedLoaded(news: postsViewModelEdited),
+      ],
     );
   });
 }

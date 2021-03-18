@@ -19,4 +19,16 @@ class PostEntity extends Equatable {
 
   @override
   bool get stringify => true;
+
+  PostEntity copyWith({
+    UserEntity user,
+    MessageEntity message,
+    int id,
+  }) {
+    return PostEntity(
+      user: user ?? this.user,
+      message: message ?? this.message,
+      id: id ?? this.id,
+    );
+  }
 }

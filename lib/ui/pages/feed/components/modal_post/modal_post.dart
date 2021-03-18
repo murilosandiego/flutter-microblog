@@ -13,7 +13,9 @@ Future<String> showModalPost(BuildContext context, {NewsViewModel news}) {
     builder: (context) {
       return BlocProvider(
         create: (context) => FormPostCubit(),
-        child: _Alert(),
+        child: _Alert(
+          news: news,
+        ),
       );
     },
   );
@@ -21,7 +23,7 @@ Future<String> showModalPost(BuildContext context, {NewsViewModel news}) {
 
 class _Alert extends StatelessWidget {
   final NewsViewModel news;
-  const _Alert({this.news});
+  const _Alert({@required this.news});
 
   @override
   Widget build(BuildContext context) {

@@ -14,4 +14,14 @@ class MessageEntity extends Equatable {
 
   @override
   bool get stringify => true;
+
+  MessageEntity copyWith({
+    String content,
+    DateTime createdAt,
+  }) {
+    return MessageEntity(
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

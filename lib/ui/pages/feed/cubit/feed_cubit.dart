@@ -50,18 +50,28 @@ class FeedCubit extends Cubit<FeedState> {
   Future<void> handleSavePost({@required String message, int postId}) async {
     try {
       final post = await savePost.save(message: message, postId: postId);
-
       final postViewModel = _toViewModel(post);
-
-      final currentPosts = (state as FeedLoaded).news;
-
-      final List<NewsViewModel> updatedPosts = List.of(currentPosts)
-        ..insert(0, postViewModel);
+      final updatedPosts = _updatedListNews(postId, postViewModel);
 
       emit(FeedLoaded(news: updatedPosts));
     } catch (e) {
       emit(FeedError(UIError.unexpected.description));
     }
+  }
+
+  List<NewsViewModel> _updatedListNews(
+    int postId,
+    NewsViewModel postViewModel,
+  ) {
+    final currentPosts = (state as FeedLoaded).news;
+
+    if (postId == null) {
+      return List.of(currentPosts)..insert(0, postViewModel);
+    }
+
+    return currentPosts.map((item) {
+      return item.id == postId ? item = postViewModel : item;
+    }).toList();
   }
 
   Future<void> logoutUser() async {

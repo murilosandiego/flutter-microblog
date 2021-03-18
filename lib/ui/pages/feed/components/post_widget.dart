@@ -1,6 +1,10 @@
+import 'package:boticario_news/ui/helpers/user_manager.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../post_viewmodel.dart';
+import 'botton_sheet.dart';
 
 class PostWidget extends StatelessWidget {
   final NewsViewModel news;
@@ -73,18 +77,18 @@ class _Header extends StatelessWidget {
             ),
           ),
         ),
-        // if (news.id != null && news.userId == UserSession.to.id)
-        Container(
-          height: 25,
-          width: 25,
-          // ignore: deprecated_member_use
-          child: FlatButton(
-            textColor: Colors.black54,
-            padding: EdgeInsets.zero,
-            onPressed: () {},
-            child: Icon(Icons.more_vert),
-          ),
-        )
+        if (news.id != null && news.userId == context.read<UserManager>().id)
+          Container(
+            height: 25,
+            width: 25,
+            // ignore: deprecated_member_use
+            child: FlatButton(
+              textColor: Colors.black54,
+              padding: EdgeInsets.zero,
+              onPressed: () => getBottomSheet(context: context, news: news),
+              child: Icon(Icons.more_vert),
+            ),
+          )
       ],
     );
   }

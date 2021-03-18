@@ -21,4 +21,20 @@ class NewsViewModel extends Equatable {
 
   @override
   bool get stringify => true;
+
+  NewsViewModel copyWith({
+    String message,
+    String date,
+    String user,
+    int id,
+    int userId,
+  }) {
+    return NewsViewModel(
+      message: message ?? this.message,
+      date: date ?? this.date,
+      user: user ?? this.user,
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+    );
+  }
 }
