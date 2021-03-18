@@ -38,22 +38,25 @@ class FeedCubit extends Cubit<FeedState> {
 
   NewsViewModel _toViewModel(PostEntity post) {
     return NewsViewModel(
-      id: post?.id,
-      message: post?.message?.content,
-      date: DateFormat(DateFormat.YEAR_MONTH_DAY)
-          .format(post?.message?.createdAt),
-      user: post?.user?.name,
-      userId: post?.user?.id,
+      id: post.id,
+      message: post.message.content,
+      date:
+          DateFormat(DateFormat.YEAR_MONTH_DAY).format(post.message.createdAt),
+      user: post.user.name,
+      userId: post.user.id,
     );
   }
 
   Future<void> handleSavePost({@required String message, int postId}) async {
     try {
-      final post = await savePost.save(message: message);
+      final post = await savePost.save(message: message, postId: postId);
+
       final postViewModel = _toViewModel(post);
 
-      final List<NewsViewModel> updatedPosts =
-          List.of((state as FeedLoaded).news)..insert(0, postViewModel);
+      final currentPosts = (state as FeedLoaded).news;
+
+      final List<NewsViewModel> updatedPosts = List.of(currentPosts)
+        ..insert(0, postViewModel);
 
       emit(FeedLoaded(news: updatedPosts));
     } catch (e) {

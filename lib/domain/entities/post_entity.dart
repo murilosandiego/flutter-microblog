@@ -15,7 +15,7 @@ class PostEntity extends Equatable {
   final int id;
 
   @override
-  List get props => [user, message];
+  List get props => [user, message, id];
 
   @override
   bool get stringify => true;

@@ -1,8 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:boticario_news/application/storage/local_storage.dart';
-import 'package:boticario_news/domain/entities/message_entity.dart';
-import 'package:boticario_news/domain/entities/post_entity.dart';
-import 'package:boticario_news/domain/entities/user_entity.dart';
 import 'package:boticario_news/domain/errors/domain_error.dart';
 import 'package:boticario_news/domain/usecases/load_posts.dart';
 import 'package:boticario_news/domain/usecases/remove_post.dart';
@@ -34,46 +31,6 @@ void main() {
   String message;
   int postId;
 
-  makePosts() => [
-        NewsViewModel(
-          message: newsList[0].message.content,
-          date: 'January 20, 2020',
-          user: newsList[0].user.name,
-        ),
-        NewsViewModel(
-          message: newsList[1].message.content,
-          date: 'January 14, 2018',
-          user: newsList[1].user.name,
-        ),
-      ];
-
-  final mockPost = PostEntity(
-    message: MessageEntity(
-      content: faker.lorem.sentence(),
-      createdAt: DateTime(1997, 07, 31),
-    ),
-    user: UserEntity(
-      name: faker.person.name(),
-      profilePicture: faker.internet.httpsUrl(),
-    ),
-  );
-
-  mockSuccessPost() => when(loadPosts.load()).thenAnswer((_) async => newsList);
-
-  mockSavePost() => when(savePost.save(
-        message: anyNamed('message'),
-      )).thenAnswer(
-        (_) async => mockPost,
-      );
-
-  mockError() => when(loadPosts.load()).thenThrow(DomainError.unexpected);
-
-  mockSavePostError() => when(savePost.save(message: anyNamed('message')))
-      .thenThrow(DomainError.unexpected);
-
-  mockLocalStorageError() =>
-      when(localStorage.clear()).thenThrow(DomainError.unexpected);
-
   setUp(() {
     loadPosts = LoadPostsSpy();
     localStorage = LocalStorageSpy();
@@ -89,117 +46,156 @@ void main() {
     );
   });
 
-  blocTest(
-    'Should call loadPosts() once when load',
-    build: () {
-      mockSuccessPost();
-      return sut;
-    },
-    act: (sut) => sut.load(),
-    verify: (_) {
-      verify(loadPosts.load()).called(1);
-    },
-  );
+  group('Load posts', () {
+    mockSuccessPost() =>
+        when(loadPosts.load()).thenAnswer((_) async => newsList);
 
-  blocTest(
-    'Should emits FeedLoaded on success',
-    build: () {
-      mockSuccessPost();
-      return sut;
-    },
-    act: (sut) => sut.load(),
-    expect: [FeedLoaded(news: makePosts())],
-  );
+    mockError() => when(loadPosts.load()).thenThrow(DomainError.unexpected);
 
-  blocTest(
-    'Should emits FeedLoaded on failure',
-    build: () {
-      mockError();
-      return sut;
-    },
-    act: (sut) => sut.load(),
-    expect: [
-      FeedError(UIError.unexpected.description),
-    ],
-  );
+    blocTest(
+      'Should call loadPosts() once when load',
+      build: () {
+        mockSuccessPost();
+        return sut;
+      },
+      act: (sut) => sut.load(),
+      verify: (_) {
+        verify(loadPosts.load()).called(1);
+      },
+    );
 
-  blocTest<FeedCubit, FeedState>(
-    'Should call localStorage.clear() with success',
-    build: () => sut,
-    act: (sut) => sut.logoutUser(),
-    verify: (_) {
-      verify(localStorage.clear()).called(1);
-    },
-  );
+    blocTest(
+      'Should emits FeedLoaded on success',
+      build: () {
+        mockSuccessPost();
+        return sut;
+      },
+      act: (sut) => sut.load(),
+      expect: [FeedLoaded(news: postsViewModel)],
+    );
 
-  blocTest(
-    'Should emits [FeedLoading, FeedError] on logoutUser',
-    build: () {
-      return sut;
-    },
-    act: (sut) => sut.logoutUser(),
-    expect: [
-      FeedLoading(),
-      LogoutUser(),
-    ],
-  );
+    blocTest(
+      'Should emits FeedLoaded on failure',
+      build: () {
+        mockError();
+        return sut;
+      },
+      act: (sut) => sut.load(),
+      expect: [
+        FeedError(UIError.unexpected.description),
+      ],
+    );
+  });
 
-  blocTest<FeedCubit, FeedState>(
-    'Should emits [FeedLoading, FeedError] on failure',
-    build: () {
-      mockLocalStorageError();
-      return sut;
-    },
-    act: (sut) => sut.logoutUser(),
-    expect: [
-      FeedLoading(),
-      FeedError(UIError.unexpected.description),
-    ],
-  );
+  group('Logout user', () {
+    mockLocalStorageError() =>
+        when(localStorage.clear()).thenThrow(DomainError.unexpected);
 
-  blocTest<FeedCubit, FeedState>(
-    'Should call SavePost once when create a post',
-    build: () {
-      return sut;
-    },
-    act: (sut) => sut.handleSavePost(message: message),
-    verify: (_) {
-      verify(savePost.save(message: message)).called(1);
-    },
-  );
+    blocTest(
+      'Should emits [FeedLoading, LogoutUser] on logoutUser',
+      build: () {
+        return sut;
+      },
+      act: (sut) => sut.logoutUser(),
+      expect: [
+        FeedLoading(),
+        LogoutUser(),
+      ],
+    );
 
-  blocTest<FeedCubit, FeedState>(
-    'Should update list of Posts when a new post created',
-    build: () {
-      mockSavePost();
-      return sut;
-    },
-    seed: FeedLoaded(news: makePosts()),
-    act: (sut) => sut.handleSavePost(message: message),
-    expect: [
-      FeedLoaded(
-        news: makePosts()
-          ..insert(
-            0,
-            NewsViewModel(
-              message: mockPost.message.content,
-              date: 'July 31, 1997',
-              user: mockPost.user.name,
+    blocTest<FeedCubit, FeedState>(
+      'Should emits [FeedLoading, FeedError] on failure',
+      build: () {
+        mockLocalStorageError();
+        return sut;
+      },
+      act: (sut) => sut.logoutUser(),
+      expect: [
+        FeedLoading(),
+        FeedError(UIError.unexpected.description),
+      ],
+    );
+
+    blocTest<FeedCubit, FeedState>(
+      'Should call localStorage.clear() with success',
+      build: () => sut,
+      act: (sut) => sut.logoutUser(),
+      verify: (_) {
+        verify(localStorage.clear()).called(1);
+      },
+    );
+  });
+
+  group('Create post', () {
+    mockSavePost() => when(savePost.save(
+          message: anyNamed('message'),
+        )).thenAnswer(
+          (_) async => mockPost,
+        );
+
+    mockSavePostError() => when(savePost.save(message: anyNamed('message')))
+        .thenThrow(DomainError.unexpected);
+
+    blocTest<FeedCubit, FeedState>(
+      'Should call SavePost once when create a post',
+      build: () {
+        return sut;
+      },
+      act: (sut) => sut.handleSavePost(message: message),
+      verify: (_) {
+        verify(savePost.save(message: message)).called(1);
+      },
+    );
+
+    blocTest<FeedCubit, FeedState>(
+      'Should update list of Posts when create a post',
+      build: () {
+        mockSavePost();
+        return sut;
+      },
+      seed: FeedLoaded(news: postsViewModel),
+      act: (sut) => sut.handleSavePost(message: message),
+      expect: [
+        FeedLoaded(
+          news: List.of(postsViewModel)
+            ..insert(
+              0,
+              NewsViewModel(
+                id: mockPost.id,
+                message: mockPost.message.content,
+                date:
+                    'January ${mockPost.message.createdAt.day}, ${mockPost.message.createdAt.year}',
+                user: mockPost.user.name,
+                userId: mockPost.user.id,
+              ),
             ),
-          ),
-      )
-    ],
-  );
+        )
+      ],
+    );
 
-  blocTest<FeedCubit, FeedState>(
-    'Should emtis [FeedLoading, FeedError] if it fails to save post',
-    build: () {
-      mockSavePostError();
-      return sut;
-    },
-    act: (sut) => sut.handleSavePost(message: message, postId: postId),
-    expect: [
-      FeedError(UIError.unexpected.description),
-    ],
-  );
+    blocTest<FeedCubit, FeedState>(
+      'Should emtis [FeedLoading, FeedError] if it fails when create post',
+      build: () {
+        mockSavePostError();
+        return sut;
+      },
+      act: (sut) => sut.handleSavePost(message: message, postId: postId),
+      expect: [
+        FeedError(UIError.unexpected.description),
+      ],
+    );
+  });
+
+  group('Update post', () {
+    blocTest<FeedCubit, FeedState>(
+      'Should call SavePost once when update a post',
+      build: () {
+        return sut;
+      },
+      act: (sut) => sut.handleSavePost(message: message, postId: postId),
+      verify: (_) {
+        verify(savePost.save(message: message, postId: postId)).called(1);
+      },
+    );
+  });
 }

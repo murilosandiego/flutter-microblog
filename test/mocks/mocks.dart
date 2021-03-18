@@ -80,23 +80,25 @@ const apiResponsePosts = """
 
 List<PostEntity> newsList = [
   PostEntity(
+    id: faker.randomGenerator.integer(10),
     message: MessageEntity(
       content: faker.lorem.sentence(),
       createdAt: DateTime(2020, 01, 20),
     ),
     user: UserEntity(
       name: faker.person.name(),
-      profilePicture: faker.internet.httpsUrl(),
+      id: faker.randomGenerator.integer(10),
     ),
   ),
   PostEntity(
+    id: faker.randomGenerator.integer(10),
     message: MessageEntity(
       content: faker.lorem.sentence(),
       createdAt: DateTime(2018, 01, 14),
     ),
     user: UserEntity(
       name: faker.person.name(),
-      profilePicture: faker.internet.httpsUrl(),
+      id: faker.randomGenerator.integer(10),
     ),
   ),
 ];
@@ -106,12 +108,25 @@ final postsViewModel = newsList
       (post) => NewsViewModel(
         id: post?.id,
         message: post?.message?.content,
-        date: '${post.message.createdAt.day}',
+        date:
+            'January ${post.message.createdAt.day}, ${post.message.createdAt.year}',
         user: post?.user?.name,
         userId: post?.user?.id,
       ),
     )
     .toList();
+
+final mockPost = PostEntity(
+  id: faker.randomGenerator.integer(10),
+  message: MessageEntity(
+    content: faker.lorem.sentence(),
+    createdAt: DateTime(1997, 01, 31),
+  ),
+  user: UserEntity(
+    name: faker.person.name(),
+    id: faker.randomGenerator.integer(10),
+  ),
+);
 
 const factoryApiResponse = """
 {
