@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../post_viewmodel.dart';
 import 'modal_post/modal_post.dart';
+import 'modal_remove.dart';
 
 Future getBottomSheet({
   @required BuildContext context,
@@ -46,12 +47,13 @@ Future getBottomSheet({
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              onTap: () {
-                // Get.back();
-                // return showModalRemove(
-                //   news: news,
-                //   context: context,
-                // );
+              onTap: () async {
+                final postId = await showModalRemove(
+                  news: news,
+                  context: context,
+                );
+                if (postId != null) cubit.handleRemovePost(postId: postId);
+                Navigator.of(context).pop();
               },
             ),
           ],

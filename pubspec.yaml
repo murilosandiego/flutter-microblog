@@ -25,13 +25,13 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  bloc: ^6.1.1
-  bloc_test: ^7.1.0
-  cupertino_icons: ^1.0.0
-  equatable: ^1.2.5
-  flutter_bloc: ^6.1.2
-  formz: ^0.3.2
-  http: ^0.12.2
+  bloc: 
+  bloc_test: 
+  cupertino_icons: 
+  equatable: 
+  flutter_bloc: 
+  formz: 
+  http: 
   intl:
   shared_preferences: 
   provider:
@@ -39,9 +39,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  faker: ^1.3.0
-  mockito: ^4.1.3
-  test: ^1.15.7
+  faker: 
+  mockito: 
+  test: 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -74,6 +74,21 @@ class FeedCubit extends Cubit<FeedState> {
     }).toList();
   }
 
+  Future<void> handleRemovePost({@required int postId}) async {
+    try {
+      await removePost.remove(postId: postId);
+
+      final currentPosts = (state as FeedLoaded).news;
+
+      final updatedPosts = List.of(currentPosts)
+        ..removeWhere((element) => element.id == postId);
+
+      emit(FeedLoaded(news: updatedPosts));
+    } catch (e) {
+      emit(FeedError(UIError.unexpected.description));
+    }
+  }
+
   Future<void> logoutUser() async {
     try {
       emit(FeedLoading());
