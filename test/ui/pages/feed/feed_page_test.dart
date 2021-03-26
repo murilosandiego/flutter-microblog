@@ -181,38 +181,167 @@ main() {
     verify(cubit.load());
   });
 
-  testWidgets(
-      'Should show Alert when tap in floating button and call handleSavePost if has message',
-      (WidgetTester tester) async {
-    await _loadPage(tester);
+  group('Create post', () {
+    testWidgets(
+        'Should show Alert when tap in floating button and call handleSavePost if has message',
+        (WidgetTester tester) async {
+      await _loadPage(tester);
 
-    expect(find.byType(AlertDialog), findsNothing);
+      expect(find.byType(AlertDialog), findsNothing);
 
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pump();
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pump();
 
-    expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.byType(AlertDialog), findsOneWidget);
 
-    navigator.currentState.pop(message);
-    await tester.pump();
+      navigator.currentState.pop(message);
+      await tester.pump();
 
-    verify(cubit.handleSavePost(message: message));
+      verify(cubit.handleSavePost(message: message));
+    });
+
+    testWidgets(
+        'Should show Alert when tap in floating button and never call handleSavePost if not has message',
+        (WidgetTester tester) async {
+      await _loadPage(tester);
+
+      expect(find.byType(AlertDialog), findsNothing);
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pump();
+
+      navigator.currentState.pop();
+      await tester.pump();
+
+      verifyNever(cubit.handleSavePost(message: message));
+    });
+  });
+  group('Edit post', () {
+    testWidgets(
+        'Should show BottomSheet when tap in more_vert icon button and call handleSavePost if has message',
+        (WidgetTester tester) async {
+      when(cubit.state)
+          .thenAnswer((_) => FeedLoaded(news: _newsMock(message, user)));
+
+      await _loadPage(tester);
+
+      expect(find.byType(AlertDialog), findsNothing);
+
+      final iconMoreVert = find.byIcon(Icons.more_vert);
+
+      expect(iconMoreVert, findsOneWidget);
+
+      await tester.tap(iconMoreVert);
+      await tester.pumpAndSettle();
+
+      final editButton = find.text('Editar');
+
+      expect(editButton, findsOneWidget);
+      expect(find.text('Remover'), findsOneWidget);
+
+      await tester.tap(editButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+
+      navigator.currentState.pop(message);
+      await tester.pumpAndSettle();
+
+      verify(cubit.handleSavePost(message: message, postId: 1));
+    });
+
+    testWidgets(
+        'Should show BottomSheet when tap in more_vert icon button and never call handleSavePost if has not message',
+        (WidgetTester tester) async {
+      when(cubit.state)
+          .thenAnswer((_) => FeedLoaded(news: _newsMock(message, user)));
+
+      await _loadPage(tester);
+
+      expect(find.byType(AlertDialog), findsNothing);
+
+      final iconMoreVert = find.byIcon(Icons.more_vert);
+
+      expect(iconMoreVert, findsOneWidget);
+
+      await tester.tap(iconMoreVert);
+      await tester.pumpAndSettle();
+
+      final editButton = find.text('Editar');
+
+      expect(editButton, findsOneWidget);
+      expect(find.text('Remover'), findsOneWidget);
+
+      await tester.tap(editButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+
+      navigator.currentState.pop();
+      await tester.pumpAndSettle();
+
+      verifyNever(cubit.handleSavePost(message: message, postId: 1));
+    });
   });
 
-  testWidgets(
-      'Should show Alert when tap in floating button and never call handleSavePost if not has message',
-      (WidgetTester tester) async {
-    await _loadPage(tester);
+  group('Remove post', () {
+    testWidgets(
+        'Should show BottomSheet when tap in more_vert icon button and call handleRemovePost',
+        (WidgetTester tester) async {
+      when(cubit.state)
+          .thenAnswer((_) => FeedLoaded(news: _newsMock(message, user)));
 
-    expect(find.byType(AlertDialog), findsNothing);
+      await _loadPage(tester);
 
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pump();
+      expect(find.byType(AlertDialog), findsNothing);
 
-    navigator.currentState.pop();
-    await tester.pump();
+      final iconMoreVert = find.byIcon(Icons.more_vert);
 
-    verifyNever(cubit.handleSavePost(message: message));
+      expect(iconMoreVert, findsOneWidget);
+
+      await tester.tap(iconMoreVert);
+      await tester.pumpAndSettle();
+
+      final removeButton = find.text('Remover');
+      await tester.tap(removeButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+
+      navigator.currentState.pop(1);
+      await tester.pumpAndSettle();
+
+      verify(cubit.handleRemovePost(postId: 1));
+    });
+
+    testWidgets(
+        'Should show BottomSheet when tap in more_vert icon button and never call handleRemovePost',
+        (WidgetTester tester) async {
+      when(cubit.state)
+          .thenAnswer((_) => FeedLoaded(news: _newsMock(message, user)));
+
+      await _loadPage(tester);
+
+      expect(find.byType(AlertDialog), findsNothing);
+
+      final iconMoreVert = find.byIcon(Icons.more_vert);
+
+      expect(iconMoreVert, findsOneWidget);
+
+      await tester.tap(iconMoreVert);
+      await tester.pumpAndSettle();
+
+      final removeButton = find.text('Remover');
+      await tester.tap(removeButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+
+      navigator.currentState.pop();
+      await tester.pumpAndSettle();
+
+      verifyNever(cubit.handleRemovePost(postId: 1));
+    });
   });
 }
 
@@ -222,11 +351,15 @@ List<NewsViewModel> _newsMock(String message, String user) {
       message: message,
       date: 'January, 20 2020',
       user: user,
+      userId: 1,
+      id: 1,
     ),
     NewsViewModel(
       message: faker.lorem.sentence(),
       date: 'January, 20 2010',
       user: faker.person.name(),
+      userId: 2,
+      id: 2,
     )
   ];
 }

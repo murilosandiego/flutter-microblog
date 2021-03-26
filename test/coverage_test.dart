@@ -30,6 +30,7 @@ import 'package:boticario_news/domain/usecases/save_current_account.dart';
 import 'package:boticario_news/domain/usecases/save_post.dart';
 import 'package:boticario_news/infra/http/http_adapter.dart';
 import 'package:boticario_news/infra/storage/local_storage_adater.dart';
+import 'package:boticario_news/main/decorators/authorize_http_client_decorator.dart';
 import 'package:boticario_news/main/factories/api_url_factory.dart';
 import 'package:boticario_news/main/factories/http/http_client_factory.dart';
 import 'package:boticario_news/main/factories/storage/cache_local_storage_factory.dart';
