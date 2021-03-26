@@ -34,6 +34,7 @@ void main() {
   setUp(() {
     loadPosts = LoadPostsSpy();
     localStorage = LocalStorageSpy();
+    removePost = RemovePostSpy();
     message = faker.lorem.sentence();
     savePost = SavePostSpy();
     postId = faker.randomGenerator.integer(10);
@@ -216,6 +217,53 @@ void main() {
       act: (sut) => sut.handleSavePost(message: message, postId: 2),
       expect: [
         FeedLoaded(news: postsViewModelEdited),
+      ],
+    );
+  });
+
+  group('Remove post', () {
+    mockSuccess() => when(
+          removePost.remove(postId: anyNamed('postId')),
+        ).thenAnswer((_) async => true);
+
+    mockError() => when(
+          removePost.remove(postId: anyNamed('postId')),
+        ).thenThrow(DomainError.unexpected);
+
+    blocTest<FeedCubit, FeedState>(
+      'Should call RemovePost once if handleRemovePost called',
+      build: () {
+        return sut;
+      },
+      act: (sut) => sut.handleRemovePost(postId: 2),
+      verify: (_) {
+        verify(removePost.remove(postId: 2)).called(1);
+      },
+    );
+
+    blocTest<FeedCubit, FeedState>(
+      'Should update a list of posts if remove post',
+      build: () {
+        mockSuccess();
+        return sut;
+      },
+      seed: FeedLoaded(news: postsViewModel),
+      act: (sut) => sut.handleRemovePost(postId: 2),
+      expect: [
+        FeedLoaded(news: <NewsViewModel>[postsViewModel[0]]),
+      ],
+    );
+
+    blocTest<FeedCubit, FeedState>(
+      'Should emits FeedError if error ocurrs',
+      build: () {
+        mockError();
+        return sut;
+      },
+      seed: FeedLoaded(news: postsViewModel),
+      act: (sut) => sut.handleRemovePost(postId: 2),
+      expect: [
+        FeedError(UIError.unexpected.description),
       ],
     );
   });

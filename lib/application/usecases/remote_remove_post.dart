@@ -11,12 +11,13 @@ class RemoteRemovePost implements RemovePost {
   RemoteRemovePost({@required this.httpClient, @required this.url});
 
   @override
-  Future<void> remove({@required int postId}) async {
+  Future<bool> remove({@required int postId}) async {
     try {
       await httpClient.request(
         url: '$url/$postId',
         method: 'delete',
       );
+      return true;
     } catch (_) {
       throw DomainError.unexpected;
     }
