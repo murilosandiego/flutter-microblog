@@ -16,10 +16,6 @@ class SplashCubit extends Cubit<SplashState> {
 
   Future<void> checkAccount({bool test = false}) async {
     try {
-      // if (!test) {
-      //   await Future.delayed(Duration(seconds: 3));
-      // }
-
       final account = await loadCurrentAccount.load();
 
       if (account != null) {
@@ -29,7 +25,7 @@ class SplashCubit extends Cubit<SplashState> {
         emit(SplashToWelcome());
       }
     } catch (_) {
-      print('Algum erro ocorreu');
+      emit(SplashToWelcome());
     }
   }
 }
