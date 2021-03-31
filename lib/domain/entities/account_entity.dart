@@ -15,7 +15,4 @@ class AccountEntity extends Equatable {
 
   @override
   List get props => [token, id, username, email];
-
-  @override
-  bool get stringify => true;
 }

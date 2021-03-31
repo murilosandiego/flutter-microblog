@@ -13,13 +13,6 @@ class UserManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeUser() {
-    _username = null;
-    _id = null;
-    _email = null;
-    notifyListeners();
-  }
-
   String get username => _username;
   String get email => _email;
   int get id => _id;

@@ -12,9 +12,6 @@ class MessageEntity extends Equatable {
   @override
   List get props => [content, createdAt];
 
-  @override
-  bool get stringify => true;
-
   MessageEntity copyWith({
     String content,
     DateTime createdAt,

@@ -17,9 +17,6 @@ class PostEntity extends Equatable {
   @override
   List get props => [user, message, id];
 
-  @override
-  bool get stringify => true;
-
   PostEntity copyWith({
     UserEntity user,
     MessageEntity message,

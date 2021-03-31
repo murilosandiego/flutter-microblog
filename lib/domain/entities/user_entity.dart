@@ -13,7 +13,4 @@ class UserEntity extends Equatable {
 
   @override
   List<Object> get props => [id, name, profilePicture];
-
-  @override
-  bool get stringify => true;
 }
