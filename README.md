@@ -21,12 +21,15 @@ This application was developed using a well-defined and decoupled architecture, 
 - intl
 - shared_preferences 
 - provider
+- faker 
+- mockito
 ## Testing
 
 - Unit tests
 - Cubit/Stream tests
 - Widget Tests
 - Navigation tests
+- Form Validation tests
 - Test Doubles
 - Mocks
 - Stubs
