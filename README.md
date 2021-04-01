@@ -1,5 +1,7 @@
 # Flutter Cubit Microblog 
 
+[![Build Status](https://travis-ci.com/murilosandiego/flutter-microblog.svg?branch=main)](https://travis-ci.com/murilosandiego/flutter-microblog) [![Coverage Status](https://coveralls.io/repos/github/murilosandiego/flutter-microblog/badge.svg?branch=main)](https://coveralls.io/github/murilosandiego/flutter-microblog?branch=main)
+
 |                       |
 | :-------------------- |
 | ![01](./docs/demo.gif) |
