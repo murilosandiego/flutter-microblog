@@ -1,6 +1,7 @@
 # Flutter Cubit Microblog 
 
 [![Build Status](https://travis-ci.com/murilosandiego/flutter-microblog.svg?branch=main)](https://travis-ci.com/murilosandiego/flutter-microblog) 
+[![codecov](https://codecov.io/gh/murilosandiego/flutter-microblog/branch/main/graph/badge.svg?token=RCXPITEO0C)](https://codecov.io/gh/murilosandiego/flutter-microblog)
 
 |                       |
 | :-------------------- |
