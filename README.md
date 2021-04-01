@@ -12,7 +12,7 @@ This application was developed using a well-defined and decoupled architecture, 
 
 ## Roadmap
 
-| Testing      | Progresso |
+| Testing      | Progress |
 | :--------- | :-------: |
 | Unit       |    ✅     |
 | Widgets    |    ✅     |
