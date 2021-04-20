@@ -1,20 +1,21 @@
+import 'package:boticario_news/main/providers/providers.dart';
 import 'package:boticario_news/ui/helpers/form_validators.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 
 import '../../../../main/routes/app_routes.dart';
 import '../../../components/app_button.dart';
 import '../../../components/app_text_form_field.dart';
 import '../../../components/create_account_button.dart';
-import '../cubit/form_signup_cubit.dart';
 import '../cubit/form_signup_state.dart';
 
 class FormSignup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<FormSignUpCubit, FormSignUpState>(
-      listener: (context, state) {
+    return ProviderListener<FormSignUpState>(
+      provider: signUpProvider,
+      onChange: (context, state) {
         if (state.status.isSubmissionSuccess) {
           Navigator.pushNamedAndRemoveUntil(
             context,
@@ -60,11 +61,12 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<FormSignUpCubit>();
+    final cubit = context.read(signUpProvider.notifier);
 
-    return BlocBuilder<FormSignUpCubit, FormSignUpState>(
-      buildWhen: (previous, current) => previous.status != current.status,
-      builder: (context, state) {
+    return Consumer(
+      builder: (context, watch, state) {
+        final state = watch(signUpProvider);
+
         return AppButton(
           isLoading: state.status.isSubmissionInProgress,
           text: 'Criar conta',
@@ -79,11 +81,12 @@ class _SubmitButton extends StatelessWidget {
 class _PasswordField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<FormSignUpCubit>(context);
+    final cubit = context.read(signUpProvider.notifier);
 
-    return BlocBuilder<FormSignUpCubit, FormSignUpState>(
-      buildWhen: (previous, current) => previous.password != current.password,
-      builder: (context, state) {
+    return Consumer(
+      builder: (context, watch, state) {
+        final state = watch(signUpProvider);
+
         return AppTextFormField(
           label: 'Senha',
           onChanged: cubit.handlePassword,
@@ -102,11 +105,12 @@ class _EmailField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<FormSignUpCubit>(context);
+    final cubit = context.read(signUpProvider.notifier);
 
-    return BlocBuilder<FormSignUpCubit, FormSignUpState>(
-      buildWhen: (previous, current) => previous.email != current.email,
-      builder: (context, state) {
+    return Consumer(
+      builder: (context, watch, state) {
+        final state = watch(signUpProvider);
+
         return AppTextFormField(
           label: 'E-mail',
           onChanged: cubit.handleEmail,
@@ -122,11 +126,12 @@ class _EmailField extends StatelessWidget {
 class _NameField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<FormSignUpCubit>(context);
+    final cubit = context.read(signUpProvider.notifier);
 
-    return BlocBuilder<FormSignUpCubit, FormSignUpState>(
-      buildWhen: (previous, current) => previous.name != current.name,
-      builder: (context, state) {
+    return Consumer(
+      builder: (context, watch, state) {
+        final state = watch(signUpProvider);
+
         return AppTextFormField(
           label: 'Nome',
           onChanged: cubit.handleName,

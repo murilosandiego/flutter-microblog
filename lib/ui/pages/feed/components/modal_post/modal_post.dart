@@ -1,23 +1,18 @@
+import 'package:boticario_news/main/providers/providers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 
 import '../../../../helpers/form_validators.dart';
 import '../../post_viewmodel.dart';
-import 'cubit/form_post_cubit.dart';
 
 Future<String> showModalPost(BuildContext context, {NewsViewModel news}) {
   return showDialog<String>(
     context: context,
-    builder: (context) {
-      return BlocProvider(
-        create: (context) => FormPostCubit(),
-        child: _Alert(
-          news: news,
-        ),
-      );
-    },
+    builder: (context) => _Alert(
+      news: news,
+    ),
   );
 }
 
@@ -27,13 +22,16 @@ class _Alert extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<FormPostCubit>();
+    final cubit = context.read(formPostProvider.notifier);
+
     return AlertDialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20.0))),
       title: Text('Criar publicação'),
-      content: BlocBuilder<FormPostCubit, FormPostState>(
-        builder: (context, state) {
+      content: Consumer(
+        builder: (_, watch, __) {
+          final state = watch(formPostProvider);
+
           return TextFormField(
             autofocus: true,
             decoration: InputDecoration(
@@ -67,8 +65,10 @@ class _Alert extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(right: 16),
-          child: BlocBuilder<FormPostCubit, FormPostState>(
-            builder: (_, state) {
+          child: Consumer(
+            builder: (_, watch, __) {
+              final state = watch(formPostProvider);
+
               return TextButton(
                 onPressed: state.status.isValid
                     ? () {

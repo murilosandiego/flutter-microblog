@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
 
@@ -11,7 +11,7 @@ import '../../../helpers/ui_error.dart';
 import '../post_viewmodel.dart';
 import 'feed_state.dart';
 
-class FeedCubit extends Cubit<FeedState> {
+class FeedCubit extends StateNotifier<FeedState> {
   final LoadPosts loadPosts;
   final SavePost savePost;
   final RemovePost removePost;
@@ -30,9 +30,9 @@ class FeedCubit extends Cubit<FeedState> {
 
       final news = postsUsers.map((post) => _toViewModel(post)).toList();
 
-      emit(FeedLoaded(news: news));
+      state = FeedLoaded(news: news);
     } catch (error) {
-      emit(FeedError(UIError.unexpected.description));
+      state = FeedError(UIError.unexpected.description);
     }
   }
 
@@ -53,9 +53,9 @@ class FeedCubit extends Cubit<FeedState> {
       final postViewModel = _toViewModel(post);
       final updatedPosts = _updatedListNews(postId, postViewModel);
 
-      emit(FeedLoaded(news: updatedPosts));
+      state = FeedLoaded(news: updatedPosts);
     } catch (e) {
-      emit(FeedError(UIError.unexpected.description));
+      state = FeedError(UIError.unexpected.description);
     }
   }
 
@@ -83,19 +83,19 @@ class FeedCubit extends Cubit<FeedState> {
       final updatedPosts = List.of(currentPosts)
         ..removeWhere((element) => element.id == postId);
 
-      emit(FeedLoaded(news: updatedPosts));
+      state = FeedLoaded(news: updatedPosts);
     } catch (e) {
-      emit(FeedError(UIError.unexpected.description));
+      state = FeedError(UIError.unexpected.description);
     }
   }
 
   Future<void> logoutUser() async {
     try {
-      emit(FeedLoading());
+      state = FeedLoading();
       await localStorage.clear();
-      emit(LogoutUser());
+      state = LogoutUser();
     } catch (error) {
-      emit(FeedError(UIError.unexpected.description));
+      state = FeedError(UIError.unexpected.description);
     }
   }
 }

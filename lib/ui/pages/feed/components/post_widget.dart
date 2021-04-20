@@ -1,8 +1,7 @@
-import 'package:boticario_news/ui/helpers/user_manager.dart';
+import 'package:boticario_news/main/providers/providers.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../post_viewmodel.dart';
 import 'botton_sheet.dart';
 
@@ -77,7 +76,8 @@ class _Header extends StatelessWidget {
             ),
           ),
         ),
-        if (news.id != null && news.userId == context.read<UserManager>().id)
+        if (news.id != null &&
+            news.userId == context.read(userManagerProvider).id)
           Container(
             height: 25,
             width: 25,

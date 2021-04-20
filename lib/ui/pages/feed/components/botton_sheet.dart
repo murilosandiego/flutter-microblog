@@ -1,6 +1,6 @@
-import 'package:boticario_news/ui/pages/feed/cubit/feed_cubit.dart';
+import 'package:boticario_news/main/providers/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../post_viewmodel.dart';
 import 'modal_post/modal_post.dart';
@@ -10,7 +10,7 @@ Future getBottomSheet({
   @required BuildContext context,
   @required NewsViewModel news,
 }) {
-  final cubit = context.read<FeedCubit>();
+  final cubit = context.read(feedProvider.notifier);
 
   return showModalBottomSheet(
     context: context,

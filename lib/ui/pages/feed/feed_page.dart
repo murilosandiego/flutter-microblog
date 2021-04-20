@@ -1,19 +1,18 @@
+import 'package:boticario_news/main/providers/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 import '../../../main/routes/app_routes.dart';
 import '../../components/reload_screen.dart';
-import '../../helpers/user_manager.dart';
 import 'components/modal_post/modal_post.dart';
 import 'components/post_widget.dart';
 import 'cubit/feed_cubit.dart';
 import 'cubit/feed_state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FeedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<FeedCubit>(context);
+    final cubit = context.read(feedProvider.notifier);
     cubit.load();
 
     return Scaffold(
@@ -36,44 +35,48 @@ class FeedPage extends StatelessWidget {
         child: Icon(Icons.post_add),
       ),
       body: RefreshIndicator(
-        child: BlocConsumer<FeedCubit, FeedState>(
-          listener: (_, state) {
-            if (state is LogoutUser) {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, AppRoutes.welcome, (route) => false);
-            }
-          },
-          builder: (context, state) {
-            if (state is FeedLoading) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
+        child: ProviderListener<FeedState>(
+            provider: feedProvider,
+            onChange: (_, state) {
+              if (state is LogoutUser) {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, AppRoutes.welcome, (route) => false);
+              }
+            },
+            child: Consumer(
+              builder: (context, watch, child) {
+                final state = watch(feedProvider);
 
-            if (state is FeedError) {
-              return ReloadScreen(
-                error: state.message,
-                reload: cubit.load,
-              );
-            }
+                if (state is FeedLoading) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-            if (state is FeedLoaded) {
-              return ListView.builder(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                itemCount: state.news.length,
-                itemBuilder: (_, index) {
-                  final news = state.news[index];
-                  return PostWidget(news: news);
-                },
-              );
-            }
+                if (state is FeedError) {
+                  return ReloadScreen(
+                    error: state.message,
+                    reload: cubit.load,
+                  );
+                }
 
-            return SizedBox();
-          },
-        ),
+                if (state is FeedLoaded) {
+                  return ListView.builder(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    itemCount: state.news.length,
+                    itemBuilder: (_, index) {
+                      final news = state.news[index];
+                      return PostWidget(news: news);
+                    },
+                  );
+                }
+
+                return SizedBox();
+              },
+            )),
         onRefresh: () => cubit.load(),
       ),
     );
@@ -96,18 +99,20 @@ class _CustomDrawer extends StatelessWidget {
           DrawerHeader(
             margin: const EdgeInsets.all(0),
             padding: const EdgeInsets.all(0),
-            child: Consumer<UserManager>(
-              builder: (context, user, child) {
+            child: Consumer(
+              builder: (context, watch, child) {
+                final state = watch(userManagerProvider);
+
                 return UserAccountsDrawerHeader(
                   currentAccountPicture: CircleAvatar(
                     child: Text(
-                      '${user.username[0]}',
+                      '${state.username[0]}',
                       style: TextStyle(fontSize: 32),
                     ),
                     backgroundColor: Colors.white,
                   ),
-                  accountName: Text(user.username),
-                  accountEmail: Text(user.email),
+                  accountName: Text(state.username),
+                  accountEmail: Text(state.email),
                 );
               },
             ),
